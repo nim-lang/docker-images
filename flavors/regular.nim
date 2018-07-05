@@ -25,7 +25,7 @@ FROM nimlang/nim:$version-alpine-slim
 #  for label, value in labels.items:
 LABEL $label="$value"
 #  end for
-RUN apk add --no-cache git
+RUN apk add --no-cache git g++
 #  if version >= "0.16.0":
 RUN cd nim; nim c koch; ./koch tools; \
     ln -s `pwd`/bin/nimble /bin/nimble; \
