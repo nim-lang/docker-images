@@ -17,7 +17,7 @@ RUN git clone https://github.com/nim-lang/nimble.git;\
     cd nimble; nim -d:release c -r src/nimble -y install;\
     ln -s `pwd`/nimble /bin/nimble
 #  end if
-ENV PATH="~/.nimble/bin:$${PATH}"
+ENV PATH="\$${HOME}/.nimble/bin:$${PATH}"
 #end proc
 #
 #proc alpine*(version: string,
@@ -38,5 +38,5 @@ RUN git clone https://github.com/nim-lang/nimble.git;\
     cd nimble; nim -d:release c -r src/nimble -y install;\
     ln -s `pwd`/nimble /bin/nimble
 #  end if
-ENV PATH="~/.nimble/bin:$${PATH}"
+ENV PATH="\$${HOME}/.nimble/bin:$${PATH}"
 #end proc
