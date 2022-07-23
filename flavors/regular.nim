@@ -6,7 +6,7 @@ FROM nimlang/nim:$version-ubuntu-slim
 #  for label, value in labels.items:
 LABEL $label="$value"
 #  end for
-RUN apt-get update; apt-get install -y git mercurial
+RUN apt-get update; apt-get install -y git mercurial libssl-dev
 #  if version >= "0.16.0":
 RUN cd nim; nim c koch; ./koch tools;\
     ln -s `pwd`/bin/nimble /bin/nimble;\
