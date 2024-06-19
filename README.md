@@ -24,14 +24,17 @@ nimlang/nim = nimlang/nim:latest = nimlang/nim:0.16.0 = nimlang/nim:0.16.0-ub
 
 Phew, that's one long list! Fortunately, unless you need a specific version of Nim, you'll probably need just `nimlang/nim`, `nimlang/nim:alpine`, or `nimlang/nim:onbuild`.
 
+Should you want to install a devel branch of the nim compiler or manage multiple nim version we have a `nimlang/choosenim` image, which provides `choosenim`. `choosenim` is a tool designed for managing your nim installation, read more [here](https://github.com/dom96/choosenim).
 ## Bases
 
-There are currently two bases: Ubuntu and Alpine. Ubuntu is the default one.
+There are currently two bases for `nimlang/nim` images: Ubuntu and Alpine. Ubuntu is the default one.
+
+The `nimlang/choosenim` image is based on bitnami/minideb.
 
 ## Flavors
 
-Images come in three flavors: *slim*, *regular*, and *onbuild*. Slim images include only the Nim compiler. Regular images include the compiler and [Nimble](https://github.com/nim-lang/nimble) package manager. Onbuild images are
-meant to be used in Dockerfiles for Nimble packages.
+`nimlang/nim` images come in three flavors: *slim*, *regular*, and *onbuild*. Slim images include only the Nim compiler. Regular images include the compiler and [Nimble](https://github.com/nim-lang/nimble) package manager. 
+Onbuild images are meant to be used in Dockerfiles for Nimble packages.
 
 # Using the Images
 
@@ -42,7 +45,7 @@ $ docker pull nimlang/nim
 ```
 
 ```shell
-$ docker pull nimlang/nim:devel
+$ docker pull nimlang/choosenim
 ```
 
 ## Compiling a Single File

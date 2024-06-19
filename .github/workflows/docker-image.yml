@@ -1,0 +1,25 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get Descriptions for tags
+      id: describe
+      run: |
+        echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        echo "::set-output name=git-describe::$(git describe --always)"
+    - uses: docker/build-push-action@v3.0.0
+      with:
+        file: choosenim/Dockerfile
+        tags: |
+          choosenim:${{ steps.describe.outputs.date }}
+          choosenim:${{ steps.describe.outputs.git-describe }}
+    
