@@ -142,3 +142,4 @@ when isMainModule:
           echo "Pushing $#..." % tags[0]
           pushImage(tags, tagPrefix)
           echo "Done!"
+
