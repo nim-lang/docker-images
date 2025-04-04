@@ -63,7 +63,7 @@ proc generateDockerfile(version, base, flavor: string,
   writeFile("Dockerfile", content)
 
 proc buildImage(tags: openarray[string], tagPrefix: string) =
-  const dockerBuildCommand = "docker build $# ."
+  const dockerBuildCommand = "docker buildx build --platform linux/amd64,linux/arm64,linux/arm $# ."
 
   var tagLine = ""
 
