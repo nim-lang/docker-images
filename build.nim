@@ -62,8 +62,8 @@ proc generateDockerfile(version, base, flavor: string,
 
   writeFile("Dockerfile", content)
 
-proc buildImage(tags: openarray[string], tagPrefix: string) =
-  const dockerBuildCommand = "docker buildx build --platform linux/amd64,linux/arm64,linux/arm $# ."
+proc buildAndPushImage(tags: openarray[string], tagPrefix: string) =
+  const dockerBuildCommand = "docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm $# ."
 
   var tagLine = ""
 
@@ -71,13 +71,6 @@ proc buildImage(tags: openarray[string], tagPrefix: string) =
     tagLine &= " -t $#:$# " % [tagPrefix, tag]
 
   discard execShellCmd dockerBuildCommand % tagLine
-
-proc pushImage(tags: openarray[string], tagPrefix: string) =
-  const dockerPushCommand = "docker push $#"
-
-  for tag in tags:
-    let tagLine = "$#:$#" % [tagPrefix, tag]
-    discard execShellCmd dockerPushCommand % tagLine
 
 proc testImage(image: string, flavor: string) =
   let succeeded = case flavor
@@ -125,9 +118,9 @@ when isMainModule:
         for flavor in flavors:
           let tags = getTags(version, base, flavor)
 
-          echo "Building $#... " % tags[0]
+          echo "Building and pushing $#... " % tags[0]
           generateDockerfile(version.key, base.key, flavor, labels)
-          buildImage(tags, tagPrefix)
+          buildAndPushImage(tags, tagPrefix)
           removeFile("Dockerfile")
           echo "Done!"
 
@@ -139,9 +132,4 @@ when isMainModule:
               flavor
             )
             echo "Done!"
-
-
-          echo "Pushing $#..." % tags[0]
-          pushImage(tags, tagPrefix)
-          echo "Done!"
 
