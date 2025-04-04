@@ -117,6 +117,8 @@ when isMainModule:
     of cmdArgument: targets.add key
     else: discard
 
+  echo "Before running the app, create a multiarch builder with `docker buildx create --use --platform=linux/arm64,linux/amd64 --name multi-platform-builder`"
+
   for version in versions.pairs:
     if len(targets) == 0 or version.key in targets:
       for base in bases.pairs:
