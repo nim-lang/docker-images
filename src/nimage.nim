@@ -1,5 +1,9 @@
-import os, parseopt, strutils, json
-import flavors / [slim, regular, onbuild]
+import std/[os, strutils, json]
+
+import climate
+
+import nimage/flavors/[slim, regular, onbuild]
+
 
 proc isDefault(props: JsonNode): bool = props.getOrDefault("default").getBool
 
@@ -87,7 +91,39 @@ proc testImage(image: string, flavor: string) =
     echo "Failed the image test"
     quit QuitFailure
 
-when isMainModule:
+proc showHelp(context: Context): int =
+  const helpMessage  = """Before running the app for the first time, create a multiarch builder:
+
+  $ nimage setup
+
+Usage:
+
+  $ nimage build-and-push [--config|-c=config.json] [--all|-a] [--dry|-d] [<version> <version> ...]
+
+Build and push specific versions:
+
+  $ nimage build-and-push <version1> <version2> ...
+
+Build and push all versions listed in the config file:
+
+  $ nimage build-and-push --all
+  
+Use custom config file (by default, `config.json` in the current directory is used):
+
+  $ nimage build-and-push --config=path/to/custom_config.json <version1> <version2> ...
+
+Dry run (nothing is built or pushed, use to check the config and command args):
+
+  $ nimage build-and-push --dry <version1> <version2> ...
+"""
+
+  echo helpMessage
+
+proc createBuilder(context: Context): int =
+  const createDockerBuilderCommand = "docker buildx create --use --platform=linux/arm64,linux/amd64 --name multi-platform-builder"  
+  discard execShellCmd createDockerBuilderCommand
+
+proc buildAndPushImages(context: Context): int =
   const
     authors = """Konstantin Molchanov <moigagoo@live.com>, \
                  Guilherme Thomazi Bonicontro <thomazi@linux.com>, \
@@ -98,38 +134,59 @@ when isMainModule:
     tagPrefix = "nimlang/nim"
     flavors = ["slim", "regular", "onbuild"]
 
+  var
+    configFile = "config.json"
+    buildAll = false
+    dryRun = false
+    targets: seq[string] = @[]
+  
+  context.opt("config", "c"):
+    configFile = val
+
+  context.flag("all", "a"):
+    buildAll = true
+
+  context.flag("dry", "d"):
+    dryRun = true
+
+  context.args:
+    targets = args
+
   let
-    config = parseFile("config.json")
+    config = parseFile(configFile)
     bases = config["bases"]
     versions = config["versions"]
 
-  var targets: seq[string] = @[]
-
-  for kind, key, val in getopt():
-    case kind
-    of cmdArgument: targets.add key
-    else: discard
-
-  echo "Before running the app, create a multiarch builder with `docker buildx create --use --platform=linux/arm64,linux/amd64 --name multi-platform-builder && docker buildx inspect --bootstrap`"
-
   for version in versions.pairs:
-    if len(targets) == 0 or version.key in targets:
+    if buildAll or version.key in targets:
       for base in bases.pairs:
         for flavor in flavors:
           let tags = getTags(version, base, flavor)
 
           echo "Building and pushing $#... " % tags[0]
-          generateDockerfile(version.key, base.key, flavor, labels)
-          buildAndPushImage(tags, tagPrefix)
-          removeFile("Dockerfile")
+          if not dryRun:
+            generateDockerfile(version.key, base.key, flavor, labels)
+            buildAndPushImage(tags, tagPrefix)
+            removeFile("Dockerfile")
           echo "Done!"
 
           # Anything before this is broken and too old to fix.
           if version.key >= "0.16.0":
             echo "Testing $#... " % tags[0]
-            testImage(
-              "$#:$#" % [tagPrefix, tags[0]],
-              flavor
-            )
+            if not dryRun:
+              testImage(
+                "$#:$#" % [tagPrefix, tags[0]],
+                 flavor
+              )
             echo "Done!"
+
+
+const commands = {
+  "build-and-push": buildAndPushImages,
+  "setup": createBuilder,
+}
+
+
+when isMainModule:
+  quit parseCommands(commands, defaultHandler = showHelp)
 
