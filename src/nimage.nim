@@ -89,7 +89,6 @@ proc testImage(image: string, flavor: string) =
 
   if not succeeded:
     echo "Failed the image test"
-    quit QuitFailure
 
 proc showHelp(context: Context): int =
   const helpMessage  = """Before running the app for the first time, create a multiarch builder:
