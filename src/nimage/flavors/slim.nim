@@ -18,7 +18,7 @@ RUN wget https://nim-lang.org/download/nim-${version}.tar.xz; \
 #
 #proc alpine*(version: string,
 #             labels: openarray[(string, string)] = {:}): string =
-FROM alpine:latest
+FROM alpine:3.20
 #  for label, value in labels.items:
 LABEL $label="$value"
 #  end for

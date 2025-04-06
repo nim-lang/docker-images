@@ -13,5 +13,4 @@ bin           = @["nimage"]
 
 requires "nim >= 2.2.2"
 requires "climate >= 1.1.3"
-requires "nph >= 0.6.1"
 
