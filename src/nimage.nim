@@ -4,13 +4,15 @@ import climate
 
 import nimage/flavors/[slim, regular, onbuild]
 
+proc isDefault(props: JsonNode): bool =
+  props.getOrDefault("default").getBool
 
-proc isDefault(props: JsonNode): bool = props.getOrDefault("default").getBool
+proc isLatest(props: JsonNode): bool =
+  props.getOrDefault("latest").getBool
 
-proc isLatest(props: JsonNode): bool = props.getOrDefault("latest").getBool
-
-proc getTags(version, base: tuple[key: string, val: JsonNode],
-             flavor: string): seq[string] =
+proc getTags(
+    version, base: tuple[key: string, val: JsonNode], flavor: string
+): seq[string] =
   result = @[]
 
   result.add([version.key, base.key, flavor].join("-"))
@@ -40,9 +42,9 @@ proc getTags(version, base: tuple[key: string, val: JsonNode],
     result.add(["latest", flavor].join("-"))
     result.add flavor
 
-proc generateDockerfile(version, base, flavor: string,
-                        labels: openarray[(string, string)]) =
-
+proc generateDockerfile(
+    version, base, flavor: string, labels: openarray[(string, string)]
+) =
   var content = ""
 
   case flavor
@@ -52,22 +54,26 @@ proc generateDockerfile(version, base, flavor: string,
       content = slim.ubuntu(version, labels)
     of "alpine":
       content = slim.alpine(version, labels)
-    else: discard
+    else:
+      discard
   of "regular":
     case base
     of "ubuntu":
       content = regular.ubuntu(version, labels)
     of "alpine":
       content = regular.alpine(version, labels)
-    else: discard
+    else:
+      discard
   of "onbuild":
     content = onbuild.any(version, base, labels)
-  else: discard
+  else:
+    discard
 
   writeFile("Dockerfile", content)
 
 proc buildAndPushImage(tags: openarray[string], tagPrefix: string) =
-  const dockerBuildCommand = "docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm $# ."
+  const dockerBuildCommand =
+    "docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm $# ."
 
   var tagLine = ""
 
@@ -77,21 +83,24 @@ proc buildAndPushImage(tags: openarray[string], tagPrefix: string) =
   discard execShellCmd dockerBuildCommand % tagLine
 
 proc testImage(image: string, flavor: string) =
-  let succeeded = case flavor
-  of "slim":
-    let cmd = "docker run --rm $# nim --version" % image
-    execShellCmd(cmd) == 0
-  of "regular", "onbuild":
-    # Check that nimble at least launches
-    let cmd = "docker run --rm $# nimble --version" % image
-    execShellCmd(cmd) == 0
-  else: true
+  let succeeded =
+    case flavor
+    of "slim":
+      let cmd = "docker run --rm $# nim --version" % image
+      execShellCmd(cmd) == 0
+    of "regular", "onbuild":
+      # Check that nimble at least launches
+      let cmd = "docker run --rm $# nimble --version" % image
+      execShellCmd(cmd) == 0
+    else:
+      true
 
   if not succeeded:
     echo "Failed the image test"
 
 proc showHelp(context: Context): int =
-  const helpMessage  = """Before running the app for the first time, create a multiarch builder:
+  const helpMessage =
+    """Before running the app for the first time, create a multiarch builder:
 
   $ nimage setup
 
@@ -119,12 +128,14 @@ Dry run (nothing is built or pushed, use to check the config and command args):
   echo helpMessage
 
 proc createBuilder(context: Context): int =
-  const createDockerBuilderCommand = "docker buildx create --use --platform=linux/arm64,linux/amd64 --name multi-platform-builder"  
+  const createDockerBuilderCommand =
+    "docker buildx create --use --platform=linux/arm64,linux/amd64 --name multi-platform-builder"
   discard execShellCmd createDockerBuilderCommand
 
 proc buildAndPushImages(context: Context): int =
   const
-    authors = """Konstantin Molchanov <moigagoo@live.com>, \
+    authors =
+      """Konstantin Molchanov <moigagoo@live.com>, \
                  Guilherme Thomazi Bonicontro <thomazi@linux.com>, \
                  Dominik Picheta <http://picheta.me>, \
                  nigredo-tori <https://github.com/nigredo-tori>, \
@@ -138,7 +149,7 @@ proc buildAndPushImages(context: Context): int =
     buildAll = false
     dryRun = false
     targets: seq[string] = @[]
-  
+
   context.opt("config", "c"):
     configFile = val
 
@@ -173,18 +184,10 @@ proc buildAndPushImages(context: Context): int =
           if version.key >= "0.16.0":
             echo "Testing $#... " % tags[0]
             if not dryRun:
-              testImage(
-                "$#:$#" % [tagPrefix, tags[0]],
-                 flavor
-              )
+              testImage("$#:$#" % [tagPrefix, tags[0]], flavor)
             echo "Done!"
 
-
-const commands = {
-  "build-and-push": buildAndPushImages,
-  "setup": createBuilder,
-}
-
+const commands = {"build-and-push": buildAndPushImages, "setup": createBuilder}
 
 when isMainModule:
   quit parseCommands(commands, defaultHandler = showHelp)
