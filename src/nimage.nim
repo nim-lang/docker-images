@@ -139,7 +139,8 @@ proc buildAndPushImages(context: Context): int =
                  Guilherme Thomazi Bonicontro <thomazi@linux.com>, \
                  Dominik Picheta <http://picheta.me>, \
                  nigredo-tori <https://github.com/nigredo-tori>, \
-                 markprocess <https://github.com/markprocess>"""
+                 markprocess <https://github.com/markprocess>, \
+                 theAkito <akito.kitsune@protonmail.com>"""
     labels = {"authors": authors}
     tagPrefix = "nimlang/nim"
     flavors = ["slim", "regular", "onbuild"]
