@@ -139,7 +139,7 @@ proc createBuilder(context: Context): int =
 proc buildAndPushImages(context: Context): int =
   const
     authors =
-      """Konstantin Molchanov <moigagoo@live.com>, \
+      """Constantine Molchanov <moigagoo@duck.com>, \
                  Guilherme Thomazi Bonicontro <thomazi@linux.com>, \
                  Dominik Picheta <http://picheta.me>, \
                  nigredo-tori <https://github.com/nigredo-tori>, \
