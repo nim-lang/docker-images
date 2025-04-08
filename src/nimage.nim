@@ -2,7 +2,8 @@ import std/[os, strutils, json]
 
 import climate
 
-import nimage/flavors/[slim, regular, onbuild]
+import nimage/flavors/[slim, regular]
+
 
 proc isDefault(props: JsonNode): bool =
   props.getOrDefault("default").getBool
@@ -64,8 +65,6 @@ proc generateDockerfile(
       content = regular.alpine(version, labels)
     else:
       discard
-  of "onbuild":
-    content = onbuild.any(version, base, labels)
   else:
     discard
 
@@ -88,7 +87,7 @@ proc testImage(image: string, flavor: string) =
     of "slim":
       let cmd = "docker run --rm $# nim --version" % image
       execShellCmd(cmd) == 0
-    of "regular", "onbuild":
+    of "regular":
       # Check that nimble at least launches
       let cmd = "docker run --rm $# nimble --version" % image
       execShellCmd(cmd) == 0
@@ -122,7 +121,7 @@ Use custom config file (by default, `config.json` in the current directory is us
 
 Dry run (nothing is built or pushed, use to check the config and command args):
 
-  $ nimage build-and-push --dry <version1> <version2> ...
+  $ nimage build-and-push --dry search_shortcut: ALT+SHIFT+SPACEsearch_shortcut: ALT+SHIFT+SPACE<version1> <version2> ...
 """
 
   echo helpMessage
@@ -143,7 +142,7 @@ proc buildAndPushImages(context: Context): int =
                  theAkito <akito.kitsune@protonmail.com>"""
     labels = {"authors": authors}
     tagPrefix = "nimlang/nim"
-    flavors = ["slim", "regular", "onbuild"]
+    flavors = ["slim", "regular"]
 
   var
     configFile = "config.json"
@@ -188,7 +187,9 @@ proc buildAndPushImages(context: Context): int =
               testImage("$#:$#" % [tagPrefix, tags[0]], flavor)
             echo "Done!"
 
+
 const commands = {"build-and-push": buildAndPushImages, "setup": createBuilder}
+
 
 when isMainModule:
   quit parseCommands(commands, defaultHandler = showHelp)
