@@ -1,8 +1,6 @@
-# Welcome to Nim
+# Welcome to <img src="https://raw.githubusercontent.com/nim-lang/assets/master/Art/logo-crown.png" height="28px"/> Nim
 
 ![Docker Pulls](https://img.shields.io/docker/pulls/nimlang/nim?logo=nim)
-
-![](https://raw.githubusercontent.com/nim-lang/assets/master/Art/logo-crown.png)
 
 Nim is a statically typed, imperative programming language that tries to give the programmer ultimate power without compromises on runtime efficiency. This means it focuses on compile-time mechanisms in all their various forms.
 
@@ -12,7 +10,7 @@ so no "stop the world" mechanism is necessary. An unsafe shared memory heap is a
 - [Official site](http://nim-lang.org)
 - [Tutorials](http://nim-lang.org/learn.html)
 - [Documentation](http://nim-lang.org/documentation.html)
-- [Report an issue with images](https://github.com/nim-lang/nimage/issues/new)
+- [Report an issue with images](https://github.com/nim-lang/docker-images/issues/new)
 
 
 # Tags
@@ -25,7 +23,7 @@ nimlang/nim = nimlang/nim:latest = nimlang/nim:2.2.2 = nimlang/nim:2.2.2-ubun
 
 Phew, that's one long list! Fortunately, unless you need a specific version of Nim, you'll probably need just `nimlang/nim` or `nimlang/nim:alpine`.
 
-Should you want to install a devel branch of the nim compiler or manage multiple nim version we have a `nimlang/choosenim` image, which provides `choosenim`. `choosenim` is a tool designed for managing your nim installation, read more [here](https://github.com/dom96/choosenim).
+Should you want to install a devel branch of the nim compiler or manage multiple nim version we have a `nimlang/choosenim` image, which provides `choosenim`. `choosenim` is a tool designed for managing your nim installation, read more [here](https://github.com/nim-lang/choosenim).
 
 
 ## Bases
