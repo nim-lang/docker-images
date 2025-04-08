@@ -43,7 +43,9 @@ proc getTags(
     result.add flavor
 
 proc generateDockerfile(
-    version, base, flavor: string, labels: openarray[(string, string)], dockerfileDir: string
+    version, base, flavor: string,
+    labels: openarray[(string, string)],
+    dockerfileDir: string,
 ) =
   var content = ""
 
@@ -71,7 +73,9 @@ proc generateDockerfile(
 
   writeFile(dockerfileDir / "Dockerfile", content)
 
-proc buildAndPushImage(tags: openarray[string], tagPrefix: string, dockerfileDir: string) =
+proc buildAndPushImage(
+    tags: openarray[string], tagPrefix: string, dockerfileDir: string
+) =
   const dockerBuildCommand =
     "docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm $# $#"
 
@@ -182,20 +186,20 @@ proc buildAndPushImages(context: Context): int =
       for base in bases.pairs:
         for flavor in flavors:
           let
-            dockerfileDir = dockerfilesDir / version.key / flavor 
+            dockerfileDir = dockerfilesDir / version.key / flavor
             tags = getTags(version, base, flavor)
 
           echo "Building and pushing $# from $#... " % [tags[0], dockerfileDir]
 
-          if not dryRun:
-            generateDockerfile(version.key, base.key, flavor, labels, dockerfileDir)
+          generateDockerfile(version.key, base.key, flavor, labels, dockerfileDir)
 
+          if not dryRun:
             buildAndPushImage(tags, tagPrefix, dockerfileDir)
 
-            if save:
-              echo "Saving Dockerfile to $#..." % dockerfileDir
-            else:
-              removeDir(dockerfileDir)
+          if save:
+            echo "Saving Dockerfile to $#..." % dockerfileDir
+          else:
+            removeDir(dockerfileDir)
 
           echo "Done!"
 
