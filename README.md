@@ -10,7 +10,7 @@ so no "stop the world" mechanism is necessary. An unsafe shared memory heap is a
 - [Official site](http://nim-lang.org)
 - [Tutorials](http://nim-lang.org/learn.html)
 - [Documentation](http://nim-lang.org/documentation.html)
-- [Report an issue with images](https://github.com/nim-lang/nimage/issues/new)
+- [Report an issue with images](https://github.com/nim-lang/docker-images/issues/new)
 
 # Tags
 
