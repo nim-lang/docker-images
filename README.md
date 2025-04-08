@@ -14,27 +14,31 @@ so no "stop the world" mechanism is necessary. An unsafe shared memory heap is a
 - [Documentation](http://nim-lang.org/documentation.html)
 - [Report an issue with images](https://github.com/nim-lang/nimage/issues/new)
 
+
 # Tags
 
-Tags indicate Nim versions, base images, and flavors. For example, `nimlang/nim:0.16.0-ubuntu-regular` means Nim version 0.16.0, based on Ubuntu, with Nimble installed. Ubuntu is the default base, so you can omit it in the tag: `nimlang/nim:0.16.0-regular`. Regular is the default flavor, so you can omit it as well: `nimlang/nim:0.16.0`. The latest Nim version is additionally tagged as `latest`: `nimlang/nim:latest`. And since Docker adds `latest` automatically, you can just write `nimlang/nim`.
+Tags indicate Nim versions, base images, and flavors. For example, `nimlang/nim:2.2.2-ubuntu-regular` means Nim version 2.2.2, based on Ubuntu, with Nimble installed. Ubuntu is the default base, so you can omit it in the tag: `nimlang/nim:2.2.2-regular`. Regular is the default flavor, so you can omit it as well: `nimlang/nim:2.2.2`. The latest Nim version is additionally tagged as `latest`: `nimlang/nim:latest`. And since Docker adds `latest` automatically, you can just write `nimlang/nim`.
 
 So, all together:
 
-nimlang/nim = nimlang/nim:latest = nimlang/nim:0.16.0 = nimlang/nim:0.16.0-ubuntu =nimlang/nim:latest-ubuntu = nimlang/nim:0.16.0-regular = nimlang/nim:latest-regular = nimlang/nim:0.16.0-ubuntu-regular = nimlang/nim:latest-ubuntu-regular
+nimlang/nim = nimlang/nim:latest = nimlang/nim:2.2.2 = nimlang/nim:2.2.2-ubuntu =nimlang/nim:latest-ubuntu = nimlang/nim:2.2.2-regular = nimlang/nim:latest-regular = nimlang/nim:2.2.2-ubuntu-regular = nimlang/nim:latest-ubuntu-regular
 
-Phew, that's one long list! Fortunately, unless you need a specific version of Nim, you'll probably need just `nimlang/nim`, `nimlang/nim:alpine`, or `nimlang/nim:onbuild`.
+Phew, that's one long list! Fortunately, unless you need a specific version of Nim, you'll probably need just `nimlang/nim` or `nimlang/nim:alpine`.
 
 Should you want to install a devel branch of the nim compiler or manage multiple nim version we have a `nimlang/choosenim` image, which provides `choosenim`. `choosenim` is a tool designed for managing your nim installation, read more [here](https://github.com/dom96/choosenim).
+
+
 ## Bases
 
 There are currently two bases for `nimlang/nim` images: Ubuntu and Alpine. Ubuntu is the default one.
 
 The `nimlang/choosenim` image is based on bitnami/minideb.
 
+
 ## Flavors
 
-`nimlang/nim` images come in three flavors: *slim*, *regular*, and *onbuild*. Slim images include only the Nim compiler. Regular images include the compiler and [Nimble](https://github.com/nim-lang/nimble) package manager. 
-Onbuild images are meant to be used in Dockerfiles for Nimble packages.
+`nimlang/nim` images come in two flavors: *slim* and *regular*. Slim images include only the Nim compiler. Regular images include the compiler and [Nimble](https://github.com/nim-lang/nimble) package manager. 
+
 
 # Using the Images
 
@@ -48,31 +52,17 @@ $ docker pull nimlang/nim
 $ docker pull nimlang/choosenim
 ```
 
+
 ## Compiling a Single File
 
 ```shell
 $ docker run --rm -v `pwd`:/usr/src/app -w /usr/src/app nimlang/nim nim c -r myapp.nim
 ```
 
+
 ## Compiling a *Static* Single File
 
 ```shell
 $ docker run --rm -v `pwd`:/usr/src/app -w /usr/src/app nimlang/nim:alpine nim c --passL:"-static -no-pie" myapp.nim
-```
-
-## Building a Nimble Package
-
-Create a Dockerfile in the package root:
-
-```dockerfile
-FROM nimlang/nim:onbuild
-ENTRYPOINT ["./mycompiledbinary"]
-```
-
-Build your image and run the compiled binary:
-
-```shell
-$ docker build -t myapp .
-$ docker run --rm myapp
 ```
 
