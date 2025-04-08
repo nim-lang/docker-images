@@ -7,7 +7,7 @@ LABEL authors="Constantine Molchanov <moigagoo@duck.com>, \
                  theAkito <akito.kitsune@protonmail.com>"
 RUN apk add --no-cache g++ curl tar xz nodejs
 RUN mkdir -p /nim; \
-    curl -sL "https://nim-lang.org/download/nim-2.2.2.tar.xz" \
+    curl -sL "https://nim-lang.org/download/nim-1.2.2.tar.xz" \
     |tar xJ --strip-components=1 -C /nim; \
     cd /nim; sh build.sh; \
     rm -r c_code tests; \

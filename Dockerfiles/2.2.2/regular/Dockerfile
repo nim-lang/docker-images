@@ -1,5 +1,5 @@
 FROM nimlang/nim:2.2.2-alpine-slim
-LABEL authors="Konstantin Molchanov <moigagoo@live.com>, \
+LABEL authors="Constantine Molchanov <moigagoo@duck.com>, \
                  Guilherme Thomazi Bonicontro <thomazi@linux.com>, \
                  Dominik Picheta <http://picheta.me>, \
                  nigredo-tori <https://github.com/nigredo-tori>, \
