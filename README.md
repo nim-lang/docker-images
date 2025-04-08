@@ -1,8 +1,6 @@
-# Welcome to Nim
+# Welcome to <img src="https://raw.githubusercontent.com/nim-lang/assets/master/Art/logo-crown.png" height="28px"/> Nim
 
 ![Docker Pulls](https://img.shields.io/docker/pulls/nimlang/nim?logo=nim)
-
-![](https://raw.githubusercontent.com/nim-lang/assets/master/Art/logo-crown.png)
 
 Nim is a statically typed, imperative programming language that tries to give the programmer ultimate power without compromises on runtime efficiency. This means it focuses on compile-time mechanisms in all their various forms.
 
