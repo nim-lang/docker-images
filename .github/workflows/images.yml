@@ -29,5 +29,5 @@ jobs:
         run: ./bin/nimage setup
 
       - name: Build and push images 
-        run: ./bin/nimage build-and-push --all
+        run: ./bin/nimage build-and-push --latest
 
