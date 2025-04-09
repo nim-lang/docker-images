@@ -157,6 +157,7 @@ proc buildAndPushImages(context: Context): int =
   var
     configFile = "config.json"
     buildAll = false
+    buildLatest = false
     dryRun = false
     save = false
     targets: seq[string] = @[]
@@ -166,6 +167,9 @@ proc buildAndPushImages(context: Context): int =
 
   context.flag("all", "a"):
     buildAll = true
+
+  context.flag("latest", "l"):
+    buildLatest = true
 
   context.flag("dry", "d"):
     dryRun = true
@@ -182,7 +186,7 @@ proc buildAndPushImages(context: Context): int =
     versions = config["versions"]
 
   for version in versions.pairs:
-    if buildAll or version.key in targets:
+    if buildAll or version.key in targets or (buildLatest and version.val.isLatest):
       for base in bases.pairs:
         for flavor in flavors:
           let
