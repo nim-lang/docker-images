@@ -2,5 +2,5 @@ build
 *.exe
 nimcache
 *.sublime-*
-Dockerfile
+./Dockerfile
 bin/

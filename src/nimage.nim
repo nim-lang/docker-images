@@ -4,7 +4,6 @@ import climate
 
 import nimage/flavors/[slim, regular]
 
-
 proc isDefault(props: JsonNode): bool =
   props.getOrDefault("default").getBool
 
@@ -44,7 +43,9 @@ proc getTags(
     result.add flavor
 
 proc generateDockerfile(
-    version, base, flavor: string, labels: openarray[(string, string)]
+    version, base, flavor: string,
+    labels: openarray[(string, string)],
+    dockerfileDir: string,
 ) =
   var content = ""
 
@@ -68,18 +69,22 @@ proc generateDockerfile(
   else:
     discard
 
-  writeFile("Dockerfile", content)
+  createDir(dockerfileDir)
 
-proc buildAndPushImage(tags: openarray[string], tagPrefix: string) =
+  writeFile(dockerfileDir / "Dockerfile", content)
+
+proc buildAndPushImage(
+    tags: openarray[string], tagPrefix: string, dockerfileDir: string
+) =
   const dockerBuildCommand =
-    "docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm $# ."
+    "docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm $# $#"
 
   var tagLine = ""
 
   for tag in tags:
     tagLine &= " -t $#:$# " % [tagPrefix, tag]
 
-  discard execShellCmd dockerBuildCommand % tagLine
+  discard execShellCmd dockerBuildCommand % [tagLine, dockerfileDir]
 
 proc testImage(image: string, flavor: string) =
   let succeeded =
@@ -105,11 +110,15 @@ proc showHelp(context: Context): int =
 
 Usage:
 
-  $ nimage build-and-push [--config|-c=config.json] [--all|-a] [--dry|-d] [<version> <version> ...]
+  $ nimage build-and-push [--config|-c=config.json] [--all|-a] [--dry|-d] [--save|-s] [<version> <version> ...]
 
 Build and push specific versions:
 
   $ nimage build-and-push <version1> <version2> ...
+
+Build and push specific versions and save the Dockerfiles in `Dockerfiles/<version>/<flavor>`:
+
+  $ nimage build-and-push --save <version1> <version2> ...
 
 Build and push all versions listed in the config file:
 
@@ -121,7 +130,7 @@ Use custom config file (by default, `config.json` in the current directory is us
 
 Dry run (nothing is built or pushed, use to check the config and command args):
 
-  $ nimage build-and-push --dry search_shortcut: ALT+SHIFT+SPACEsearch_shortcut: ALT+SHIFT+SPACE<version1> <version2> ...
+  $ nimage build-and-push --dry <version1> <version2> ...
 """
 
   echo helpMessage
@@ -134,7 +143,7 @@ proc createBuilder(context: Context): int =
 proc buildAndPushImages(context: Context): int =
   const
     authors =
-      """Konstantin Molchanov <moigagoo@live.com>, \
+      """Constantine Molchanov <moigagoo@duck.com>, \
                  Guilherme Thomazi Bonicontro <thomazi@linux.com>, \
                  Dominik Picheta <http://picheta.me>, \
                  nigredo-tori <https://github.com/nigredo-tori>, \
@@ -143,11 +152,13 @@ proc buildAndPushImages(context: Context): int =
     labels = {"authors": authors}
     tagPrefix = "nimlang/nim"
     flavors = ["slim", "regular"]
+    dockerfilesDir = "Dockerfiles"
 
   var
     configFile = "config.json"
     buildAll = false
     dryRun = false
+    save = false
     targets: seq[string] = @[]
 
   context.opt("config", "c"):
@@ -158,6 +169,9 @@ proc buildAndPushImages(context: Context): int =
 
   context.flag("dry", "d"):
     dryRun = true
+
+  context.flag("save", "s"):
+    save = true
 
   context.args:
     targets = args
@@ -171,26 +185,34 @@ proc buildAndPushImages(context: Context): int =
     if buildAll or version.key in targets:
       for base in bases.pairs:
         for flavor in flavors:
-          let tags = getTags(version, base, flavor)
+          let
+            dockerfileDir = dockerfilesDir / version.key / flavor
+            tags = getTags(version, base, flavor)
 
-          echo "Building and pushing $#... " % tags[0]
+          echo "Building and pushing $# from $#... " % [tags[0], dockerfileDir]
+
+          generateDockerfile(version.key, base.key, flavor, labels, dockerfileDir)
+
           if not dryRun:
-            generateDockerfile(version.key, base.key, flavor, labels)
-            buildAndPushImage(tags, tagPrefix)
-            removeFile("Dockerfile")
+            buildAndPushImage(tags, tagPrefix, dockerfileDir)
+
+          if save:
+            echo "Saving Dockerfile to $#..." % dockerfileDir
+          else:
+            removeDir(dockerfileDir)
+
           echo "Done!"
 
           # Anything before this is broken and too old to fix.
           if version.key >= "0.16.0":
             echo "Testing $#... " % tags[0]
+
             if not dryRun:
               testImage("$#:$#" % [tagPrefix, tags[0]], flavor)
-            echo "Done!"
 
+            echo "Done!"
 
 const commands = {"build-and-push": buildAndPushImages, "setup": createBuilder}
 
-
 when isMainModule:
   quit parseCommands(commands, defaultHandler = showHelp)
-
