@@ -1,13 +1,13 @@
-name: Build and Push Docker Images to Docker Hub
+name: Build and Push the Docker Images for all Nim Versions to Docker Hub
 
 on:
-  push:
-    branches:
-      - develop
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
 
 jobs:
   build_and_push:
-    name: Build and push Docker images to Docker Hub
+    name: All Nim Versions
     runs-on: ubuntu-latest
 
     steps:
@@ -28,6 +28,6 @@ jobs:
       - name: Set up multiarch builder
         run: ./bin/nimage setup
 
-      - name: Build and push images 
-        run: ./bin/nimage build-and-push --latest
+      - name: Build and push the images
+        run: ./bin/nimage build-and-push --all
 
