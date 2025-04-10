@@ -1,4 +1,4 @@
-name: Build and Push the Docker Image for the Latest Nim Version to Docker Hub
+name: Latest version
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build_and_push:
-    name: Latest Nim Version
+    name: Build and push
     runs-on: ubuntu-latest
 
     steps:
