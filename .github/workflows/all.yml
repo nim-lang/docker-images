@@ -81,7 +81,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build the builder-pusher app
-        run: nimble build
+        run: nimble build -d:release
 
       - name: Set up multiarch builder
         run: ./bin/nimage setup
