@@ -142,14 +142,7 @@ proc createBuilder(context: Context): int =
 
 proc buildAndPushImages(context: Context): int =
   const
-    authors =
-      """Constantine Molchanov <moigagoo@duck.com>, \
-                 Guilherme Thomazi Bonicontro <thomazi@linux.com>, \
-                 Dominik Picheta <http://picheta.me>, \
-                 nigredo-tori <https://github.com/nigredo-tori>, \
-                 markprocess <https://github.com/markprocess>, \
-                 theAkito <akito.kitsune@protonmail.com>"""
-    labels = {"authors": authors}
+    labels = {"authors": "https://github.com/nim-lang/docker-images/graphs/contributors"}
     tagPrefix = "nimlang/nim"
     flavors = ["slim", "regular"]
     dockerfilesDir = "Dockerfiles"
