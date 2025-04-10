@@ -22,12 +22,12 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build the builder-pusher app
-        run: nimble build
+      - name: Install the builder-pusher app
+        run: nimble install -y dhbp
 
       - name: Set up multiarch builder
-        run: ./bin/nimage setup
+        run: dhbp setup
 
       - name: Build and push the image
-        run: ./bin/nimage build-and-push --latest
+        run: dhbp build-and-push --latest
 
