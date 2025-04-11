@@ -16,14 +16,14 @@ so no "stop the world" mechanism is necessary. An unsafe shared memory heap is a
 
 # Images Build Status
 
-- ![Latest](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang%2Fdocker-images%2Factions%2Fworkflows%2F155124648%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=Latest)
-- ![2.2.x](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398794%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=2.2.x)
-- ![2.0.x](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398793%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=2.0.x)
-- ![1.6.x](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398792%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=1.6.x)
-- ![1.4.x](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398791%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=1.4.x)
-- ![1.2.x](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398790%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=1.2.x)
-- ![1.0.x](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398789%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=1.0.x)
-- ![0.x.x](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398787%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=0.x.x)
+- ![Latest version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang%2Fdocker-images%2Factions%2Fworkflows%2F155124648%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=Latest&color=green)
+- ![2.2.x branch](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398794%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=2.2.x&color=green)
+- ![2.0.x branch](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398793%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=2.0.x&color=green)
+- ![1.6.x branch](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398792%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=1.6.x&color=green)
+- ![1.4.x branch](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398791%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=1.4.x&color=green)
+- ![1.2.x branch](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398790%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=1.2.x&color=green)
+- ![1.0.x branch](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398789%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=1.0.x&color=green)
+- ![0.x.x branch](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398787%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=0.x.x&color=green)
 
 
 # Tags
