@@ -2,7 +2,6 @@
 
 ![Docker Pulls](https://img.shields.io/docker/pulls/nimlang/nim?logo=nim)
 
-[![All versions](https://github.com/Nim-Lang-CI/docker-images-regular/actions/workflows/all.yml/badge.svg)](https://github.com/Nim-Lang-CI/docker-images-regular/actions/workflows/all.yml)
 
 Nim is a statically typed, imperative programming language that tries to give the programmer ultimate power without compromises on runtime efficiency. This means it focuses on compile-time mechanisms in all their various forms.
 
