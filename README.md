@@ -14,6 +14,18 @@ so no "stop the world" mechanism is necessary. An unsafe shared memory heap is a
 - [Report an issue with images](https://github.com/nim-lang/docker-images/issues/new)
 
 
+# Images Build Status
+
+- ![Latest](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang%2Fdocker-images%2Factions%2Fworkflows%2F155124648%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=Latest)
+- ![2.2.x](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398794%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=2.2.x)
+- ![2.0.x](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398793%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=2.0.x)
+- ![1.6.x](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398792%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=1.6.x)
+- ![1.4.x](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398791%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=1.4.x)
+- ![1.2.x](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398790%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=1.2.x)
+- ![1.0.x](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398789%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=1.0.x)
+- ![0.x.x](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fnim-lang-ci%2Fdocker-images-regular%2Factions%2Fworkflows%2F155398787%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=0.x.x)
+
+
 # Tags
 
 Tags indicate Nim versions, base images, and flavors. For example, `nimlang/nim:2.2.2-ubuntu-regular` means Nim version 2.2.2, based on Ubuntu, with Nimble installed. Ubuntu is the default base, so you can omit it in the tag: `nimlang/nim:2.2.2-regular`. Regular is the default flavor, so you can omit it as well: `nimlang/nim:2.2.2`. The latest Nim version is additionally tagged as `latest`: `nimlang/nim:latest`. And since Docker adds `latest` automatically, you can just write `nimlang/nim`.
