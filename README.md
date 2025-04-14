@@ -26,6 +26,19 @@ Phew, that's one long list! Fortunately, unless you need a specific version of 
 
 Should you want to install a devel branch of the nim compiler or manage multiple nim version we have a `nimlang/choosenim` image, which provides `choosenim`. `choosenim` is a tool designed for managing your nim installation, read more [here](https://github.com/nim-lang/choosenim).
 
+
+## Bases
+
+There are currently two bases for `nimlang/nim` images: Ubuntu and Alpine. Ubuntu is the default one.
+
+The `nimlang/choosenim` image is based on bitnami/minideb.
+
+
+## Flavors
+
+`nimlang/nim` images come in two flavors: *slim* and *regular*. Slim images include only the Nim compiler. Regular images include the compiler and [Nimble](https://github.com/nim-lang/nimble) package manager. 
+
+
 ## Available Tags
 
 - [latest, regular, latest-regular, 2.2.2, latest-ubuntu, 2.2.2-ubuntu, ubuntu, latest-ubuntu-regular, 2.2.2-regular, 2.2.2-ubuntu-regular](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.2/regular/Dockerfile)
@@ -244,18 +257,6 @@ Should you want to install a devel branch of the nim compiler or manage multiple
 - [0.13.0-slim, 0.13.0-ubuntu-slim](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/0.13.0/slim/Dockerfile)
 - [0.13.0-alpine, 0.13.0-alpine-regular](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/0.13.0/regular/Dockerfile)
 - [0.13.0-alpine-slim](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/0.13.0/slim/Dockerfile)
-
-
-## Bases
-
-There are currently two bases for `nimlang/nim` images: Ubuntu and Alpine. Ubuntu is the default one.
-
-The `nimlang/choosenim` image is based on bitnami/minideb.
-
-
-## Flavors
-
-`nimlang/nim` images come in two flavors: *slim* and *regular*. Slim images include only the Nim compiler. Regular images include the compiler and [Nimble](https://github.com/nim-lang/nimble) package manager. 
 
 
 # Build Status
