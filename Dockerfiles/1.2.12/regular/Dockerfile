@@ -1,10 +1,5 @@
 FROM nimlang/nim:1.2.12-alpine-slim
-LABEL authors="Constantine Molchanov <moigagoo@duck.com>, \
-                 Guilherme Thomazi Bonicontro <thomazi@linux.com>, \
-                 Dominik Picheta <http://picheta.me>, \
-                 nigredo-tori <https://github.com/nigredo-tori>, \
-                 markprocess <https://github.com/markprocess>, \
-                 theAkito <akito.kitsune@protonmail.com>"
+LABEL authors="https://github.com/nim-lang/docker-images/graphs/contributors"
 RUN apk add --no-cache git mercurial openssl
 RUN cd nim; nim c koch; ./koch tools;\
     ln -s `pwd`/bin/nimble /bin/nimble;\
