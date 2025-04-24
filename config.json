@@ -1,6 +1,9 @@
 {
   "versions": {
-    "2.2.2": {"latest": true},
+    "2.2.4": {
+      "latest": true
+    },
+    "2.2.2": {},
     "2.2.0": {},
     "2.0.14": {},
     "2.0.12": {},
@@ -56,7 +59,9 @@
     "0.13.0": {}
   },
   "bases": {
-    "ubuntu": {"default": true},
+    "ubuntu": {
+      "default": true
+    },
     "alpine": {}
   }
 }
