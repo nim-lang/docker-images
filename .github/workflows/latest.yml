@@ -1,4 +1,4 @@
-name: Build and Push the Docker Image for the Latest Nim Version to Docker Hub
+name: Latest version
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build_and_push:
-    name: Latest Nim Version
+    name: Build and push
     runs-on: ubuntu-latest
 
     steps:
@@ -22,12 +22,12 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build the builder-pusher app
-        run: nimble build
+      - name: Install the builder-pusher app
+        run: nimble install dhbp@">=1.0.3"
 
       - name: Set up multiarch builder
-        run: ./bin/nimage setup
+        run: dhbp setup
 
       - name: Build and push the image
-        run: ./bin/nimage build-and-push --latest
+        run: dhbp build-and-push --latest
 

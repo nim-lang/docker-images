@@ -1,4 +1,4 @@
-FROM nimlang/nim:1.0.2-alpine-slim
+FROM nimlang/nim:2.2.4-alpine-slim
 LABEL authors="https://github.com/nim-lang/docker-images/graphs/contributors"
 RUN apk add --no-cache git mercurial openssl
 RUN cd nim; nim c koch; ./koch tools;\
