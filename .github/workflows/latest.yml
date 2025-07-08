@@ -23,7 +23,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Install the builder-pusher app
-        run: nimble install dhbp@">=1.1.2"
+        run: nimble install dhbp@">=1.1.3"
 
       - name: Set up multiarch builder
         run: dhbp setup
