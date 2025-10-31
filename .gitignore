@@ -4,3 +4,4 @@ nimcache
 *.sublime-*
 ./Dockerfile
 bin/
+nim

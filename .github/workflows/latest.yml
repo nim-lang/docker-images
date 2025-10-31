@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: jiro4989/setup-nim-action@v2
         with:
           nim-version: 2.2.2
@@ -23,7 +23,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Install the builder-pusher app
-        run: nimble install dhbp@">=1.0.3"
+        run: nimble install dhbp@">=1.1.6"
 
       - name: Set up multiarch builder
         run: dhbp setup
