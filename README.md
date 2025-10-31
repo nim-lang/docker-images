@@ -41,12 +41,19 @@ The `nimlang/choosenim` image is based on bitnami/minideb.
 
 ## Available Tags
 
+- [`2.2.6-ubuntu-regular`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/regular/ubuntu/Dockerfile)
+    - [`2.2.6-regular`, `2.2.6-ubuntu`, `2.2.6`, `latest-regular`, `latest-ubuntu`, `latest`, `2-regular`, `2-ubuntu`, `2`, `2.2-regular`, `2.2-ubuntu`, `2.2`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/regular/ubuntu/Dockerfile)
+- [`2.2.6-ubuntu-slim`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/slim/ubuntu/Dockerfile)
+    - [`2.2.6-slim`, `latest-slim`, `2-slim`, `2.2-slim`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/slim/ubuntu/Dockerfile)
+- [`2.2.6-alpine-regular`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/regular/alpine/Dockerfile)
+    - [`2.2.6-alpine`, `latest-alpine`, `2-alpine`, `2.2-alpine`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/regular/alpine/Dockerfile)
+- [`2.2.6-alpine-slim`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/slim/alpine/Dockerfile)
 - [`2.2.4-ubuntu-regular`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.4/regular/ubuntu/Dockerfile)
-    - [`2.2.4-regular`, `2.2.4-ubuntu`, `2.2.4`, `latest-regular`, `latest-ubuntu`, `latest`, `2-regular`, `2-ubuntu`, `2`, `2.2-regular`, `2.2-ubuntu`, `2.2`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.4/regular/ubuntu/Dockerfile)
+    - [`2.2.4-regular`, `2.2.4-ubuntu`, `2.2.4`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.4/regular/ubuntu/Dockerfile)
 - [`2.2.4-ubuntu-slim`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.4/slim/ubuntu/Dockerfile)
-    - [`2.2.4-slim`, `latest-slim`, `2-slim`, `2.2-slim`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.4/slim/ubuntu/Dockerfile)
+    - [`2.2.4-slim`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.4/slim/ubuntu/Dockerfile)
 - [`2.2.4-alpine-regular`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.4/regular/alpine/Dockerfile)
-    - [`2.2.4-alpine`, `latest-alpine`, `2-alpine`, `2.2-alpine`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.4/regular/alpine/Dockerfile)
+    - [`2.2.4-alpine`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.4/regular/alpine/Dockerfile)
 - [`2.2.4-alpine-slim`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.4/slim/alpine/Dockerfile)
 - [`2.2.2-ubuntu-regular`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.2/regular/ubuntu/Dockerfile)
     - [`2.2.2-regular`, `2.2.2-ubuntu`, `2.2.2`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.2/regular/ubuntu/Dockerfile)
