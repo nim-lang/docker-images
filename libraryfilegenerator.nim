@@ -1,4 +1,4 @@
-import std/[os, strutils, osproc]
+import std/[strutils, osproc]
 
 let
   currentCommit = execProcess("git rev-parse HEAD").strip()
@@ -40,4 +40,4 @@ for v in versions:
   output.add "Architectures: amd64, arm64v8, arm32v7\n\n"
 
 writeFile("nim", output)
-echo "Generated 'nim-manifest'. Paste this into the official-images repo."
+echo "Generated 'nim'. Paste this into the official-images repo."
