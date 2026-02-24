@@ -6,4 +6,3 @@ nimcache
 bin/
 nim
 nimbledeps
-nim-manifest

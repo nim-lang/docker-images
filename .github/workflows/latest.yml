@@ -39,9 +39,7 @@ jobs:
       - name: Build and Push
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./dockerfiles/${{ steps.meta.outputs.version }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          build-args: |
-            NIM_VERSION=${{ steps.meta.outputs.version }}

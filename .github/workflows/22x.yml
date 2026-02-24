@@ -36,9 +36,7 @@ jobs:
       - name: Build and Push
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./dockerfiles/${{ matrix.nim-version }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
           tags: nimlang/nim:${{ matrix.nim-version }}
-          build-args: |
-            NIM_VERSION=${{ matrix.nim-version }}

@@ -1,8 +1,8 @@
 import std/[os, strutils, osproc]
 
-# Use git to get the latest hash for the library file
-let currentCommit = execProcess("git rev-parse HEAD").strip()
-let gitRepo = "https://github.com/nim-lang/docker-images.git"
+let
+  currentCommit = execProcess("git rev-parse HEAD").strip()
+  gitRepo = "https://github.com/nim-lang/docker-images.git"
 
 let versions = [
   (version: "2.2.8", tags: @["2.2.8", "2.2", "2", "latest"]),
@@ -39,5 +39,5 @@ for v in versions:
   output.add "Directory: dockerfiles/" & v.version & "\n"
   output.add "Architectures: amd64, arm64v8, arm32v7\n\n"
 
-writeFile("nim-manifest", output)
+writeFile("nim", output)
 echo "Generated 'nim-manifest'. Paste this into the official-images repo."
