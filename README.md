@@ -2,7 +2,6 @@
 
 ![Docker Pulls](https://img.shields.io/docker/pulls/nimlang/nim?logo=nim)
 
-
 Nim is a statically typed, imperative programming language that tries to give the programmer ultimate power without compromises on runtime efficiency. This means it focuses on compile-time mechanisms in all their various forms.
 
 Beneath a nice infix/indentation based syntax with a powerful (AST based, hygienic) macro system lies a semantic model that supports a soft realtime GC on thread local heaps. Asynchronous message passing is used between threads,
@@ -23,10 +22,14 @@ Slim images include only the Nim compiler. Regular images include the compiler, 
 
 ## Available Tags
 
-- [`latest`, `2.2.6`, `2.2`, `2`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/regular/ubuntu/Dockerfile)
-- [`slim`, `2.2.6-slim`, `2.2-slim`, `2-slim`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/slim/ubuntu/Dockerfile)
-- [`alpine`, `2.2.6-alpine`, `2.2-alpine`, `2-alpine`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/regular/alpine/Dockerfile)
-- [`alpine-slim`, `2.2.6-alpine-slim`, `2.2-alpine-slim`, `2-alpine-slim`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/slim/alpine/Dockerfile)
+- [`latest`, `2.2.8`, `2.2`, `2`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.8/regular/ubuntu/Dockerfile)
+- [`slim`, `2.2.8-slim`, `2.2-slim`, `2-slim`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.8/slim/ubuntu/Dockerfile)
+- [`alpine`, `2.2.8-alpine`, `2.2-alpine`, `2-alpine`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.8/regular/alpine/Dockerfile)
+- [`alpine-slim`, `2.2.8-alpine-slim`, `2.2-alpine-slim`, `2-alpine-slim`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.8/slim/alpine/Dockerfile)
+- [`2.2.6`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/regular/ubuntu/Dockerfile)
+- [`2.2.6-slim`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/slim/ubuntu/Dockerfile)
+- [`2.2.6-alpine`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/regular/alpine/Dockerfile)
+- [`2.2.6-alpine-slim`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.6/slim/alpine/Dockerfile)
 - [`2.2.4`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.4/regular/ubuntu/Dockerfile)
 - [`2.2.4-slim`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.4/slim/ubuntu/Dockerfile)
 - [`2.2.4-alpine`](https://github.com/nim-lang/docker-images/blob/develop/Dockerfiles/2.2.4/regular/alpine/Dockerfile)
@@ -137,9 +140,8 @@ $ docker pull nimlang/nim
 $ docker run --rm -v `pwd`:/usr/src/app -w /usr/src/app nimlang/nim nim c -r myapp.nim
 ```
 
-## Compiling a *Static* Single File
+## Compiling a _Static_ Single File
 
 ```shell
 $ docker run --rm -v `pwd`:/usr/src/app -w /usr/src/app nimlang/nim:alpine nim c --passL:"-static -no-pie" myapp.nim
 ```
-

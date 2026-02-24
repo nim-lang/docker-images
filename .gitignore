@@ -5,3 +5,4 @@ nimcache
 ./Dockerfile
 bin/
 nim
+nimbledeps
