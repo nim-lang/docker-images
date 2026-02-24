@@ -1,13 +1,22 @@
-name: Nim Build - Latest & Floating Tags
+name: Maintenance - Nim 2.2.x
 
 on:
-  push:
-    tags:
-      - '[0-9]+.[0-9]+.[0-9]+'
+  schedule:
+    - cron: "0 0 1 * *"
+  workflow_dispatch:
 
 jobs:
-  release:
+  maintenance:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        nim-version:
+          - 2.2.6
+          - 2.2.4
+          - 2.2.2
+          - 2.2.0
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,22 +33,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract Metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: nimlang/nim
-          flavor: |
-            latest=auto
-          tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-
       - name: Build and Push
         uses: docker/build-push-action@v5
         with:
-          context: ./dockerfiles/${{ steps.meta.outputs.version }}
+          context: ./dockerfiles/${{ matrix.nim-version }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: nimlang/nim:${{ matrix.nim-version }}
