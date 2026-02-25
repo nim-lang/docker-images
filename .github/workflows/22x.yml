@@ -33,10 +33,26 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Determine Platforms
+        id: platforms
+        run: |
+          DOCKERFILE="./dockerfiles/${{ matrix.nim-version }}/Dockerfile"
+          PLATFORMS="linux/amd64"
+
+          if ! grep -q "URL_ARM64=none" "$DOCKERFILE"; then
+            PLATFORMS="$PLATFORMS,linux/arm64"
+          fi
+
+          if ! grep -q "URL_ARMV7=none" "$DOCKERFILE"; then
+            PLATFORMS="$PLATFORMS,linux/arm/v7"
+          fi
+
+          echo "platforms=$PLATFORMS" >> $GITHUB_OUTPUT
+
       - name: Build and Push
         uses: docker/build-push-action@v5
         with:
           context: ./dockerfiles/${{ matrix.nim-version }}
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: ${{ steps.platforms.outputs.platforms }}
           push: true
           tags: nimlang/nim:${{ matrix.nim-version }}

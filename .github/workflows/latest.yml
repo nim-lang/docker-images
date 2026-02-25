@@ -3,7 +3,7 @@ name: Nim Build - Latest & Floating Tags
 on:
   push:
     tags:
-      - '[0-9]+.[0-9]+.[0-9]+'
+      - "[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   release:
@@ -36,10 +36,27 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
 
+      - name: Determine Platforms
+        id: platforms
+        run: |
+          # Use the version extracted by metadata-action to find the right folder
+          DOCKERFILE="./dockerfiles/${{ steps.meta.outputs.version }}/Dockerfile"
+          PLATFORMS="linux/amd64"
+
+          if ! grep -q "URL_ARM64=none" "$DOCKERFILE"; then
+            PLATFORMS="$PLATFORMS,linux/arm64"
+          fi
+
+          if ! grep -q "URL_ARMV7=none" "$DOCKERFILE"; then
+            PLATFORMS="$PLATFORMS,linux/arm/v7"
+          fi
+
+          echo "platforms=$PLATFORMS" >> $GITHUB_OUTPUT
+
       - name: Build and Push
         uses: docker/build-push-action@v5
         with:
           context: ./dockerfiles/${{ steps.meta.outputs.version }}
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: ${{ steps.platforms.outputs.platforms }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
