@@ -2,7 +2,7 @@ FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 ARG TARGETARCH
-ENV NIM_VERSION 2.0.8
+ENV NIM_VERSION=2.0.8
 
 ARG URL_AMD64=https://github.com/nim-lang/nightlies/releases/download/2024-07-03-version-2-0-5935c3bfa9fec6505394867b23510eb5cbab3dbf/nim-2.0.8-linux_x64.tar.xz
 ARG SHA_AMD64=C971320D391DB30917B3B61C471CFF4B3CD3CD883D4F7AF099D3C9018CC15683
@@ -25,7 +25,7 @@ RUN case "${TARGETARCH}" in \
   "arm")   URL=$URL_ARMV7 && CHKSUM=$SHA_ARMV7 ;; \
   *) echo "Unsupported arch: ${TARGETARCH}"; exit 1 ;; \
   esac && \
-  if [ "$URL" = "none" ]; then echo "Binary not found for $TARGETARCH"; exit 1; fi && \
+  if [ "$URL" = "none" ]; then echo "Binary not found for $TARGETARCH"; fi && \
   curl -L "$URL" -o nim.tar.xz && \
   echo "${CHKSUM}  nim.tar.xz" | sha256sum -c - && \
   tar -xJf nim.tar.xz && \
@@ -35,3 +35,4 @@ RUN case "${TARGETARCH}" in \
 ENV PATH="/root/.nimble/bin:/opt/nim/bin:${PATH}"
 WORKDIR /usr/src/app
 CMD ["nim", "--help"]
+ 
