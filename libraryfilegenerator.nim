@@ -1,4 +1,4 @@
-import std/[strutils, osproc]
+import std/[os, strutils, osproc]
 
 let
   currentCommit = execProcess("git rev-parse HEAD").strip()
@@ -34,10 +34,29 @@ var output = "Maintainers: Constantine Molchanov (@moigagoo)\n"
 output.add "GitRepo: " & gitRepo & "\n\n"
 
 for v in versions:
+  let dirPath = "dockerfiles" / v.version
+  let dockerfilePath = dirPath / "Dockerfile"
+
+  if not fileExists(dockerfilePath):
+    echo "Warning: skipping " & v.version & " because " & dockerfilePath &
+      " was not found."
+    continue
+
+  let content = readFile(dockerfilePath)
+  var supportedArchs: seq[string]
+
+  if "URL_AMD64=none" notin content:
+    supportedArchs.add "amd64"
+  if "URL_ARM64=none" notin content:
+    supportedArchs.add "arm64v8"
+  if "URL_ARMV7=none" notin content:
+    supportedArchs.add "arm32v7"
+
   output.add "Tags: " & v.tags.join(", ") & "\n"
   output.add "GitCommit: " & currentCommit & "\n"
-  output.add "Directory: dockerfiles/" & v.version & "\n"
-  output.add "Architectures: amd64, arm64v8, arm32v7\n\n"
+  output.add "Directory: " & dirPath.relativePath(".", sep = '/') & "\n"
+  output.add "Architectures: " & supportedArchs.join(", ") & "\n\n"
 
 writeFile("nim", output)
-echo "Generated 'nim'. Paste this into the official-images repo."
+echo "Generated 'nim' manifest."
+echo "Review the output to ensure architectures are correctly filtered for each version."
