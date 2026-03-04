@@ -1,10 +1,10 @@
 FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 
-ENV NIM_VERSION=%%VERSION%%
+ENV NIM_VERSION=2.0.14
 
-ARG URL=%%URL%%
-ARG SHA=%%SHA%%
+ARG URL=https://github.com/nim-lang/nightlies/releases/download/2024-12-23-version-2-0-bf4de6a394e040d9810cba8c69fb2829ff04dcc6/nim-2.0.14-linux_armv7l.tar.xz
+ARG SHA=C15439E201CD9ECB83A655C7C30B088AE06593DE07717571BC77E1FC7B606F28
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
   gcc g++ libc6-dev git nodejs ca-certificates openssl curl xz-utils \

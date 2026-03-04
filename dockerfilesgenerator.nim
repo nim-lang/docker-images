@@ -64,28 +64,24 @@ proc generate() =
     echo "Processing Nim " & ver & "..."
     let versionData = releases[ver]
 
-    let archMap =
-      {"linux_x64": "AMD64", "linux_arm64": "ARM64", "linux_armv7l": "ARMV7"}.toTable
+    let archMap = {
+      "linux_x64": "amd64", "linux_arm64": "arm64v8", "linux_armv7l": "arm32v7"
+    }.toTable
 
-    var content = templateContent.replace("%%VERSION%%", ver)
-
-    for jsonArch, templateSuffix in archMap:
+    for jsonArch, archDir in archMap:
       if versionData.hasKey(jsonArch):
         let node = versionData[jsonArch]
         let url = node["github_url"].getStr()
-
         let sha = getLocalSha256(url)
 
-        content = content.replace("%%URL_" & templateSuffix & "%%", url)
-        content = content.replace("%%SHA_" & templateSuffix & "%%", sha)
-      else:
-        content = content.replace("%%URL_" & templateSuffix & "%%", "none")
-        content = content.replace("%%SHA_" & templateSuffix & "%%", "0")
+        var content = templateContent.replace("%%VERSION%%", ver)
+        content = content.replace("%%URL%%", url)
+        content = content.replace("%%SHA%%", sha)
 
-    let dir = "dockerfiles" / ver
-    createDir(dir)
-    writeFile(dir / "Dockerfile", content)
-    echo "  [SUCCESS] Generated: " & dir
+        let dir = "dockerfiles" / ver / archDir
+        createDir(dir)
+        writeFile(dir / "Dockerfile", content)
+        echo "  [SUCCESS] Generated: " & dir / "Dockerfile"
 
   client.close()
 

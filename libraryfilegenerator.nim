@@ -36,28 +36,33 @@ output.add "GitRepo: " & gitRepo & "\n\n"
 
 for v in versions:
   let dirPath = "dockerfiles" / v.version
-  let dockerfilePath = dirPath / "Dockerfile"
-
-  if not fileExists(dockerfilePath):
-    echo "Warning: skipping " & v.version & " because " & dockerfilePath &
-      " was not found."
-    continue
-
-  let content = readFile(dockerfilePath)
   var supportedArchs: seq[string]
 
-  if "URL_AMD64=none" notin content:
+  if dirExists(dirPath / "amd64"):
     supportedArchs.add "amd64"
-  if "URL_ARM64=none" notin content:
+  if dirExists(dirPath / "arm64v8"):
     supportedArchs.add "arm64v8"
-  if "URL_ARMV7=none" notin content:
+  if dirExists(dirPath / "arm32v7"):
     supportedArchs.add "arm32v7"
+
+  if supportedArchs.len == 0:
+    echo "Warning: skipping " & v.version &
+      " because no architecture subdirectories were found."
+    continue
 
   output.add "Tags: " & v.tags.join(", ") & "\n"
   output.add "GitCommit: " & currentCommit & "\n"
-  output.add "Directory: " & dirPath.relativePath(".", sep = '/') & "\n"
-  output.add "Architectures: " & supportedArchs.join(", ") & "\n\n"
+  output.add "Architectures: " & supportedArchs.join(", ") & "\n"
+
+  # Map directories for each architecture
+  for arch in supportedArchs:
+    let archDir = (dirPath / arch).relativePath(".", sep = '/')
+    if arch == "amd64":
+      output.add "Directory: " & archDir & "\n"
+    else:
+      output.add arch & "-Directory: " & archDir & "\n"
+
+  output.add "\n"
 
 writeFile("nim", output)
 echo "Generated 'nim' manifest."
-echo "Review the output to ensure architectures are correctly filtered for each version."

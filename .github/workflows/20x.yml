@@ -2,7 +2,7 @@ name: Maintenance - Nim 2.0.x
 
 on:
   schedule:
-    - cron: "0 0 1 1,7 *"
+    - cron: "0 0 1 * *"
   workflow_dispatch:
 
 jobs:
@@ -37,26 +37,35 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Determine Platforms
-        id: platforms
+      - name: Build and Push Multi-Arch
         run: |
-          DOCKERFILE="./dockerfiles/${{ matrix.nim-version }}/Dockerfile"
-          PLATFORMS="linux/amd64"
+          VERSION="${{ matrix.nim-version }}"
+          BASE_TAG="nimlang/nim:$VERSION"
+          MANIFEST_TAGS=""
 
-          if ! grep -q "URL_ARM64=none" "$DOCKERFILE"; then
-            PLATFORMS="$PLATFORMS,linux/arm64"
+          # amd64
+          if [ -d "./dockerfiles/$VERSION/amd64" ]; then
+            echo "Building amd64..."
+            docker buildx build --platform linux/amd64 -t "${BASE_TAG}-amd64" --push "./dockerfiles/$VERSION/amd64"
+            MANIFEST_TAGS="${MANIFEST_TAGS} ${BASE_TAG}-amd64"
           fi
 
-          if ! grep -q "URL_ARMV7=none" "$DOCKERFILE"; then
-            PLATFORMS="$PLATFORMS,linux/arm/v7"
+          # arm64v8
+          if [ -d "./dockerfiles/$VERSION/arm64v8" ]; then
+            echo "Building arm64v8..."
+            docker buildx build --platform linux/arm64 -t "${BASE_TAG}-arm64v8" --push "./dockerfiles/$VERSION/arm64v8"
+            MANIFEST_TAGS="${MANIFEST_TAGS} ${BASE_TAG}-arm64v8"
           fi
 
-          echo "platforms=$PLATFORMS" >> $GITHUB_OUTPUT
+          # arm32v7
+          if [ -d "./dockerfiles/$VERSION/arm32v7" ]; then
+            echo "Building arm32v7..."
+            docker buildx build --platform linux/arm/v7 -t "${BASE_TAG}-arm32v7" --push "./dockerfiles/$VERSION/arm32v7"
+            MANIFEST_TAGS="${MANIFEST_TAGS} ${BASE_TAG}-arm32v7"
+          fi
 
-      - name: Build and Push
-        uses: docker/build-push-action@v6
-        with:
-          context: ./dockerfiles/${{ matrix.nim-version }}
-          platforms: ${{ steps.platforms.outputs.platforms }}
-          push: true
-          tags: nimlang/nim:${{ matrix.nim-version }}
+          if [ -n "$MANIFEST_TAGS" ]; then
+            echo "Creating manifest for ${BASE_TAG}..."
+            docker manifest create "${BASE_TAG}" $MANIFEST_TAGS
+            docker manifest push "${BASE_TAG}"
+          fi

@@ -36,27 +36,39 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
 
-      - name: Determine Platforms
-        id: platforms
+      - name: Build and Push Multi-Arch
         run: |
-          # Use the version extracted by metadata-action to find the right folder
-          DOCKERFILE="./dockerfiles/${{ steps.meta.outputs.version }}/Dockerfile"
-          PLATFORMS="linux/amd64"
+          VERSION="${{ steps.meta.outputs.version }}"
+          TAGS="${{ steps.meta.outputs.tags }}"
 
-          if ! grep -q "URL_ARM64=none" "$DOCKERFILE"; then
-            PLATFORMS="$PLATFORMS,linux/arm64"
+          # Use the first tag as a base for architecture-specific images
+          FIRST_TAG=$(echo "$TAGS" | head -n 1)
+          ARCH_TAGS=""
+
+          # amd64
+          if [ -d "./dockerfiles/$VERSION/amd64" ]; then
+            echo "Building amd64..."
+            docker buildx build --platform linux/amd64 -t "${FIRST_TAG}-amd64" --push "./dockerfiles/$VERSION/amd64"
+            ARCH_TAGS="${ARCH_TAGS} ${FIRST_TAG}-amd64"
           fi
 
-          if ! grep -q "URL_ARMV7=none" "$DOCKERFILE"; then
-            PLATFORMS="$PLATFORMS,linux/arm/v7"
+          # arm64v8
+          if [ -d "./dockerfiles/$VERSION/arm64v8" ]; then
+            echo "Building arm64v8..."
+            docker buildx build --platform linux/arm64 -t "${FIRST_TAG}-arm64v8" --push "./dockerfiles/$VERSION/arm64v8"
+            ARCH_TAGS="${ARCH_TAGS} ${FIRST_TAG}-arm64v8"
           fi
 
-          echo "platforms=$PLATFORMS" >> $GITHUB_OUTPUT
+          # arm32v7
+          if [ -d "./dockerfiles/$VERSION/arm32v7" ]; then
+            echo "Building arm32v7..."
+            docker buildx build --platform linux/arm/v7 -t "${FIRST_TAG}-arm32v7" --push "./dockerfiles/$VERSION/arm32v7"
+            ARCH_TAGS="${ARCH_TAGS} ${FIRST_TAG}-arm32v7"
+          fi
 
-      - name: Build and Push
-        uses: docker/build-push-action@v6
-        with:
-          context: ./dockerfiles/${{ steps.meta.outputs.version }}
-          platforms: ${{ steps.platforms.outputs.platforms }}
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          # Create manifests for all tags
+          for TAG in $TAGS; do
+            echo "Creating manifest for ${TAG}..."
+            docker manifest create "${TAG}" $ARCH_TAGS
+            docker manifest push "${TAG}"
+          done
