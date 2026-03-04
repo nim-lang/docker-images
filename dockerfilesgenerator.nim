@@ -65,23 +65,43 @@ proc generate() =
     let versionData = releases[ver]
 
     let archMap = {
-      "linux_x64": "amd64", "linux_arm64": "arm64v8", "linux_armv7l": "arm32v7"
+      "linux_x64": (suffix: "AMD64", dir: "amd64", targetArch: "amd64"),
+      "linux_arm64": (suffix: "ARM64", dir: "arm64v8", targetArch: "arm64"),
+      "linux_armv7l": (suffix: "ARMV7", dir: "arm32v7", targetArch: "arm"),
     }.toTable
 
-    for jsonArch, archDir in archMap:
+    var rootContent = templateContent.replace("%%VERSION%%", ver)
+
+    # First pass: fill in all URLs and SHAs in the template
+    for jsonArch, data in archMap:
       if versionData.hasKey(jsonArch):
         let node = versionData[jsonArch]
         let url = node["github_url"].getStr()
         let sha = getLocalSha256(url)
 
-        var content = templateContent.replace("%%VERSION%%", ver)
-        content = content.replace("%%URL%%", url)
-        content = content.replace("%%SHA%%", sha)
+        rootContent = rootContent.replace("%%URL_" & data.suffix & "%%", url)
+        rootContent = rootContent.replace("%%SHA_" & data.suffix & "%%", sha)
+      else:
+        rootContent = rootContent.replace("%%URL_" & data.suffix & "%%", "none")
+        rootContent = rootContent.replace("%%SHA_" & data.suffix & "%%", "0")
 
-        let dir = "dockerfiles" / ver / archDir
-        createDir(dir)
-        writeFile(dir / "Dockerfile", content)
-        echo "  [SUCCESS] Generated: " & dir / "Dockerfile"
+    # Generate root Dockerfile for the version (multi-arch)
+    let versionDir = "dockerfiles" / ver
+    createDir(versionDir)
+    writeFile(versionDir / "Dockerfile", rootContent)
+    echo "  [SUCCESS] Generated Root: " & versionDir / "Dockerfile"
+
+    # Generate architecture-specific Dockerfiles in subdirectories
+    for jsonArch, data in archMap:
+      if versionData.hasKey(jsonArch):
+        # We start from the already-processed rootContent but set the default TARGETARCH
+        # to ensure it works even with 'docker build' (no buildx).
+        let singleArchContent =
+          rootContent.replace("ARG TARGETARCH", "ARG TARGETARCH=" & data.targetArch)
+        let archDir = versionDir / data.dir
+        createDir(archDir)
+        writeFile(archDir / "Dockerfile", singleArchContent)
+        echo "  [SUCCESS] Generated Arch: " & archDir / "Dockerfile"
 
   client.close()
 

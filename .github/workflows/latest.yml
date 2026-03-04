@@ -4,13 +4,14 @@ on:
   push:
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
+  workflow_dispatch:
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -36,39 +37,26 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
 
-      - name: Build and Push Multi-Arch
+      - name: Determine Platforms
+        id: platforms
         run: |
           VERSION="${{ steps.meta.outputs.version }}"
-          TAGS="${{ steps.meta.outputs.tags }}"
+          PLATFORMS="linux/amd64"
 
-          # Use the first tag as a base for architecture-specific images
-          FIRST_TAG=$(echo "$TAGS" | head -n 1)
-          ARCH_TAGS=""
-
-          # amd64
-          if [ -d "./dockerfiles/$VERSION/amd64" ]; then
-            echo "Building amd64..."
-            docker buildx build --platform linux/amd64 -t "${FIRST_TAG}-amd64" --push "./dockerfiles/$VERSION/amd64"
-            ARCH_TAGS="${ARCH_TAGS} ${FIRST_TAG}-amd64"
-          fi
-
-          # arm64v8
           if [ -d "./dockerfiles/$VERSION/arm64v8" ]; then
-            echo "Building arm64v8..."
-            docker buildx build --platform linux/arm64 -t "${FIRST_TAG}-arm64v8" --push "./dockerfiles/$VERSION/arm64v8"
-            ARCH_TAGS="${ARCH_TAGS} ${FIRST_TAG}-arm64v8"
+            PLATFORMS="$PLATFORMS,linux/arm64"
           fi
 
-          # arm32v7
           if [ -d "./dockerfiles/$VERSION/arm32v7" ]; then
-            echo "Building arm32v7..."
-            docker buildx build --platform linux/arm/v7 -t "${FIRST_TAG}-arm32v7" --push "./dockerfiles/$VERSION/arm32v7"
-            ARCH_TAGS="${ARCH_TAGS} ${FIRST_TAG}-arm32v7"
+            PLATFORMS="$PLATFORMS,linux/arm/v7"
           fi
 
-          # Create manifests for all tags
-          for TAG in $TAGS; do
-            echo "Creating manifest for ${TAG}..."
-            docker manifest create "${TAG}" $ARCH_TAGS
-            docker manifest push "${TAG}"
-          done
+          echo "platforms=$PLATFORMS" >> $GITHUB_OUTPUT
+
+      - name: Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./dockerfiles/${{ steps.meta.outputs.version }}
+          platforms: ${{ steps.platforms.outputs.platforms }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
