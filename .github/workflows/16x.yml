@@ -67,10 +67,8 @@ jobs:
             MANIFEST_TAGS="${MANIFEST_TAGS} ${BASE_TAG}-arm32v7"
           fi
 
-      - name: Build and Push
-        uses: docker/build-push-action@v6
-        with:
-          context: ./dockerfiles/${{ matrix.nim-version }}
-          platforms: ${{ steps.platforms.outputs.platforms }}
-          push: true
-          tags: nimlang/nim:${{ matrix.nim-version }}
+          if [ -n "$MANIFEST_TAGS" ]; then
+            echo "Creating manifest for ${BASE_TAG}..."
+            docker manifest create "${BASE_TAG}" $MANIFEST_TAGS
+            docker manifest push "${BASE_TAG}"
+          fi
