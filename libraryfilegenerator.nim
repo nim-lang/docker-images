@@ -5,7 +5,8 @@ let
   gitRepo = "https://github.com/nim-lang/docker-images.git"
 
 let versions = [
-  (version: "2.2.8", tags: @["2.2.8", "2.2", "2", "latest"]),
+  (version: "2.2.10", tags: @["2.2.10", "2.2", "2", "latest"]),
+  (version: "2.2.8", tags: @["2.2.8"]),
   (version: "2.2.6", tags: @["2.2.6"]),
   (version: "2.2.4", tags: @["2.2.4"]),
   (version: "2.2.2", tags: @["2.2.2"]),

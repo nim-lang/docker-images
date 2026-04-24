@@ -12,6 +12,8 @@ jobs:
       fail-fast: false
       matrix:
         nim-version:
+          - 2.2.10
+          - 2.2.8
           - 2.2.6
           - 2.2.4
           - 2.2.2
