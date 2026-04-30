@@ -1,15 +1,7 @@
-FROM node:lts-noble
+FROM node:lts-trixie
 
 ENV NIM_VERSION=1.6.2
-
-ARG URL_AMD64=https://github.com/nim-lang/nightlies/releases/download/2021-12-17-version-1-6-9084d9bc02bcd983b81a4c76a05f27b9ce2707dd/nim-1.6.2-linux_x64.tar.xz
-ARG SHA_AMD64=9E0C616FE504402E29E43D44708A49416DCBFA295CEE1883CE6E5BFB25C364F1
-
-ARG URL_ARM64=https://github.com/nim-lang/nightlies/releases/download/2021-12-17-version-1-6-9084d9bc02bcd983b81a4c76a05f27b9ce2707dd/nim-1.6.2-linux_arm64.tar.xz
-ARG SHA_ARM64=89E772E3E7773D2A21FB7C2498110BAE09E3C6167591AED502C8D34FA7CFBBC4
-
-ARG URL_ARMV7=https://github.com/nim-lang/nightlies/releases/download/2021-12-17-version-1-6-9084d9bc02bcd983b81a4c76a05f27b9ce2707dd/nim-1.6.2-linux_armv7l.tar.xz
-ARG SHA_ARMV7=A727D3882B6D28FFEE24BABB1EBE15C3262A0758D1CDAA15452C244DE106BB5C
+ENV PATH="/opt/nim/bin:${PATH}"
 
 RUN set -eux; \
   apt-get update; \
@@ -23,29 +15,23 @@ RUN set -eux; \
     curl \
     xz-utils \
   ; \
-  rm -rf /var/lib/apt/lists/*
+  apt-get dist-clean
 
 WORKDIR /tmp
 
 RUN set -eux; \
   dpkgArch="$(dpkg --print-architecture)"; \
   case "${dpkgArch}" in \
-    amd64) URL="$URL_AMD64"; CHKSUM="$SHA_AMD64" ;; \
-    arm64) URL="$URL_ARM64"; CHKSUM="$SHA_ARM64" ;; \
-    armhf) URL="$URL_ARMV7"; CHKSUM="$SHA_ARMV7" ;; \
+    amd64) url='https://github.com/nim-lang/nightlies/releases/download/2021-12-17-version-1-6-9084d9bc02bcd983b81a4c76a05f27b9ce2707dd/nim-1.6.2-linux_x64.tar.xz'; sha256='9E0C616FE504402E29E43D44708A49416DCBFA295CEE1883CE6E5BFB25C364F1' ;; \
+    arm64) url='https://github.com/nim-lang/nightlies/releases/download/2021-12-17-version-1-6-9084d9bc02bcd983b81a4c76a05f27b9ce2707dd/nim-1.6.2-linux_arm64.tar.xz'; sha256='89E772E3E7773D2A21FB7C2498110BAE09E3C6167591AED502C8D34FA7CFBBC4' ;; \
+    armhf) url='https://github.com/nim-lang/nightlies/releases/download/2021-12-17-version-1-6-9084d9bc02bcd983b81a4c76a05f27b9ce2707dd/nim-1.6.2-linux_armv7l.tar.xz'; sha256='A727D3882B6D28FFEE24BABB1EBE15C3262A0758D1CDAA15452C244DE106BB5C' ;; \
     *) echo >&2 "error: unsupported architecture: ${dpkgArch}"; exit 1 ;; \
   esac; \
-  if [ "$URL" = "none" ] || [ -z "$URL" ]; then \
-    echo >&2 "error: Nim binary not available for ${dpkgArch} in version ${NIM_VERSION}"; \
-    exit 1; \
-  fi; \
-  curl --fail --location "$URL" --output nim.tar.xz; \
-  echo "${CHKSUM}  nim.tar.xz" | sha256sum -c -; \
-  tar -xJf nim.tar.xz; \
-  mv "nim-${NIM_VERSION}" /opt/nim; \
+  curl --fail --location "$url" --output nim.tar.xz; \
+  echo "$sha256 *nim.tar.xz" | sha256sum --check --strict -; \
+  mkdir -p /opt/nim; \
+  tar -xJf nim.tar.xz --strip-components=1 --directory /opt/nim "nim-${NIM_VERSION}"; \
   rm nim.tar.xz; \
-  /opt/nim/bin/nim --version
+  nim --version
 
-ENV PATH="/opt/nim/bin:${PATH}"
 WORKDIR /usr/src/app
-CMD ["nim", "--help"]

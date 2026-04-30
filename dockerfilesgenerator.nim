@@ -65,9 +65,9 @@ proc generate() =
     let versionData = releases[ver]
 
     let archMap = {
-      "linux_x64": (suffix: "AMD64", dir: "amd64", targetArch: "amd64"),
-      "linux_arm64": (suffix: "ARM64", dir: "arm64v8", targetArch: "arm64"),
-      "linux_armv7l": (suffix: "ARMV7", dir: "arm32v7", targetArch: "arm"),
+      "linux_x64": (suffix: "AMD64", dir: "amd64"),
+      "linux_arm64": (suffix: "ARM64", dir: "arm64v8"),
+      "linux_armv7l": (suffix: "ARMV7", dir: "arm32v7"),
     }.toTable
 
     var rootContent = templateContent.replace("%%VERSION%%", ver)

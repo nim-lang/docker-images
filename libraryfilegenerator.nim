@@ -30,14 +30,7 @@ for v in versions:
   output.add "Tags: " & v.tags.join(", ") & "\n"
   output.add "GitCommit: " & currentCommit & "\n"
   output.add "Architectures: " & supportedArchs.join(", ") & "\n"
-
-  # Map directories for each architecture
-  for arch in supportedArchs:
-    let archDir = (dirPath / arch).relativePath(".", sep = '/')
-    if arch == "amd64":
-      output.add "Directory: " & archDir & "\n"
-    else:
-      output.add arch & "-Directory: " & archDir & "\n"
+  output.add "Directory: " & dirPath.relativePath(".", sep = '/') & "\n"
 
   output.add "\n"
 
