@@ -1,8 +1,5 @@
 FROM node:lts-trixie
 
-ENV NIM_VERSION=2.0.2
-ENV PATH="/opt/nim/bin:${PATH}"
-
 RUN set -eux; \
   apt-get update; \
   apt-get install -y --no-install-recommends \
@@ -17,14 +14,16 @@ RUN set -eux; \
   ; \
   apt-get dist-clean
 
+ENV NIM_VERSION=2.0.2
+ENV PATH="/opt/nim/bin:${PATH}"
+
 WORKDIR /tmp
 
 RUN set -eux; \
   dpkgArch="$(dpkg --print-architecture)"; \
   case "${dpkgArch}" in \
-    amd64) url='https://github.com/nim-lang/nightlies/releases/download/2023-12-15-version-2-0-c4c44d10df8a14204a75c34e499def200589cb7c/nim-2.0.2-linux_x64.tar.xz'; sha256='047DDE8FF40B18628AC1188BAA9CA992D05F1F45C5121D1D07A76224F06E1551' ;; \
-    arm64) url='https://github.com/nim-lang/nightlies/releases/download/2023-12-15-version-2-0-c4c44d10df8a14204a75c34e499def200589cb7c/nim-2.0.2-linux_arm64.tar.xz'; sha256='1888D1FFE41360E0ACCBD3547E0699C8B9781CD9E96FC1FF2692D8449D8168AC' ;; \
-    armhf) url='https://github.com/nim-lang/nightlies/releases/download/2023-12-15-version-2-0-c4c44d10df8a14204a75c34e499def200589cb7c/nim-2.0.2-linux_armv7l.tar.xz'; sha256='31307C6E1489B68ED0B152D3C08AA5A57C6E9A3546B54B4B453F3B6145FB4CBB' ;; \
+    amd64) url='https://github.com/nim-lang/nightlies/releases/download/2023-12-15-version-2-0-c4c44d10df8a14204a75c34e499def200589cb7c/nim-2.0.2-linux_x64.tar.xz'; sha256='047dde8ff40b18628ac1188baa9ca992d05f1f45c5121d1d07a76224f06e1551' ;; \
+    arm64) url='https://github.com/nim-lang/nightlies/releases/download/2023-12-15-version-2-0-c4c44d10df8a14204a75c34e499def200589cb7c/nim-2.0.2-linux_arm64.tar.xz'; sha256='1888d1ffe41360e0accbd3547e0699c8b9781cd9e96fc1ff2692d8449d8168ac' ;; \
     *) echo >&2 "error: unsupported architecture: ${dpkgArch}"; exit 1 ;; \
   esac; \
   curl --fail --location "$url" --output nim.tar.xz; \
@@ -35,3 +34,5 @@ RUN set -eux; \
   nim --version
 
 WORKDIR /usr/src/app
+
+CMD ["bash"]
