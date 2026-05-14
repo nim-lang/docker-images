@@ -9,7 +9,8 @@ let versions = [
 ]
 
 var output = "Maintainers: Constantine Molchanov (@moigagoo)\n"
-output.add "GitRepo: " & gitRepo & "\n\n"
+output.add "GitRepo: " & gitRepo & "\n"
+output.add "GitCommit: " & currentCommit & "\n\n"
 
 for v in versions:
   let dirPath = "dockerfiles" / v.version
@@ -28,8 +29,7 @@ for v in versions:
     continue
 
   output.add "Tags: " & v.tags.join(", ") & "\n"
-  output.add "GitCommit: " & currentCommit & "\n"
-  output.add "Architectures: " & supportedArchs.join(", ") & "\n"
+  output.add "Architectures: amd64, arm64v8\n"
   output.add "Directory: " & dirPath.relativePath(".", sep = '/') & "\n"
 
   output.add "\n"
