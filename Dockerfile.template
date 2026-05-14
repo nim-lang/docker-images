@@ -1,8 +1,5 @@
 FROM node:lts-trixie
 
-ENV NIM_VERSION=%%VERSION%%
-ENV PATH="/opt/nim/bin:${PATH}"
-
 RUN set -eux; \
   apt-get update; \
   apt-get install -y --no-install-recommends \
@@ -16,6 +13,9 @@ RUN set -eux; \
     xz-utils \
   ; \
   apt-get dist-clean
+
+ENV NIM_VERSION=%%VERSION%%
+ENV PATH="/opt/nim/bin:${PATH}"
 
 WORKDIR /tmp
 
