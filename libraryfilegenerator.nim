@@ -14,18 +14,9 @@ output.add "GitCommit: " & currentCommit & "\n\n"
 
 for v in versions:
   let dirPath = "dockerfiles" / v.version
-  var supportedArchs: seq[string]
 
-  if dirExists(dirPath / "amd64"):
-    supportedArchs.add "amd64"
-  if dirExists(dirPath / "arm64v8"):
-    supportedArchs.add "arm64v8"
-  if dirExists(dirPath / "arm32v7"):
-    supportedArchs.add "arm32v7"
-
-  if supportedArchs.len == 0:
-    echo "Warning: skipping " & v.version &
-      " because no architecture subdirectories were found."
+  if not dirExists(dirPath):
+    echo "Warning: skipping " & v.version & " because " & dirPath & " does not exist."
     continue
 
   output.add "Tags: " & v.tags.join(", ") & "\n"
