@@ -31,9 +31,8 @@ proc getLocalSha256(url: string): string =
       ctx.update(addr buffer[0], uint(bytesRead))
     f.close()
 
-    # Finalize and convert to hex string
     let digest = ctx.finish()
-    result = $digest # nimcrypto's MDigest type converts to lowercase hex with $
+    result = ($digest).toLowerAscii()
   except CatchableError as e:
     echo "    !!! Error processing " & url & ": " & e.msg
     result = "0"
