@@ -24,7 +24,6 @@ RUN set -eux; \
   case "${dpkgArch}" in \
     amd64) url='%%URL_AMD64%%'; sha256='%%SHA_AMD64%%' ;; \
     arm64) url='%%URL_ARM64%%'; sha256='%%SHA_ARM64%%' ;; \
-    armhf) url='%%URL_ARMV7%%'; sha256='%%SHA_ARMV7%%' ;; \
     *) echo >&2 "error: unsupported architecture: ${dpkgArch}"; exit 1 ;; \
   esac; \
   curl --fail --location "$url" --output nim.tar.xz; \
