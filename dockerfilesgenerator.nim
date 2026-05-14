@@ -88,15 +88,6 @@ proc generate() =
     writeFile(versionDir / "Dockerfile", rootContent)
     echo "  [SUCCESS] Generated Root: " & versionDir / "Dockerfile"
 
-    # Generate architecture-specific Dockerfiles in subdirectories.
-    # The content is identical because the image selects the upstream
-    # binary at build time using dpkg --print-architecture.
-    for jsonArch, data in archMap:
-      if versionData.hasKey(jsonArch):
-        let archDir = versionDir / data.dir
-        createDir(archDir)
-        writeFile(archDir / "Dockerfile", rootContent)
-        echo "  [SUCCESS] Generated Arch: " & archDir / "Dockerfile"
 
   client.close()
 
