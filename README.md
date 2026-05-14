@@ -8,7 +8,7 @@ These images provide a stable, multi-architecture environment for developing and
 
 - **Multi-Backend Support:** Includes the necessary toolchains for C, C++, and JavaScript compilation.
 - **Precompiled Binaries:** Built using official Nim binaries for maximum reliability and consistency with the upstream releases.
-- **Multi-Arch:** Native support for `amd64`, `arm64`, and `armv7` via Docker manifests.
+- **Multi-Arch:** Native support for `amd64` and `arm64` via Docker manifests.
 
 ## How to Use This Image
 
@@ -51,7 +51,6 @@ This image is a manifest list. Docker will automatically pull the correct layer 
 
 - `linux/amd64`
 - `linux/arm64` (e.g., Apple Silicon, AWS Graviton)
-- `linux/arm/v7` (e.g., Raspberry Pi 3/4)
 
 ## Maintenance
 
