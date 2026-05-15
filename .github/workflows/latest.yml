@@ -36,10 +36,19 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
 
+      - name: Determine Platforms
+        id: platforms
+        run: |
+          PLATFORMS="linux/amd64"
+          if ! grep -q "arm64) url='none'" ./dockerfiles/${{ steps.meta.outputs.version }}/Dockerfile; then
+            PLATFORMS="$PLATFORMS,linux/arm64"
+          fi
+          echo "platforms=$PLATFORMS" >> $GITHUB_OUTPUT
+
       - name: Build and Push
         uses: docker/build-push-action@v7
         with:
           context: ./dockerfiles/${{ steps.meta.outputs.version }}
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ steps.platforms.outputs.platforms }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}

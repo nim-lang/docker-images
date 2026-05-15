@@ -80,7 +80,7 @@ proc generate() =
         rootContent = rootContent.replace("%%SHA_" & data.suffix & "%%", sha)
       else:
         rootContent = rootContent.replace("%%URL_" & data.suffix & "%%", "none")
-        rootContent = rootContent.replace("%%SHA_" & data.suffix & "%%", "0")
+        rootContent = rootContent.replace("%%SHA_" & data.suffix & "%%", "none")
 
     # Generate root Dockerfile for the version (multi-arch)
     let versionDir = "dockerfiles" / ver

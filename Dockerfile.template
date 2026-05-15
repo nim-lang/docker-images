@@ -26,6 +26,9 @@ RUN set -eux; \
     arm64) url='%%URL_ARM64%%'; sha256='%%SHA_ARM64%%' ;; \
     *) echo >&2 "error: unsupported architecture: ${dpkgArch}"; exit 1 ;; \
   esac; \
+  if [ "$url" = "none" ]; then \
+    echo >&2 "error: no upstream binary for ${dpkgArch} in this Nim version"; exit 1; \
+  fi; \
   curl --fail --location "$url" --output nim.tar.xz; \
   echo "$sha256 *nim.tar.xz" | sha256sum --check --strict -; \
   mkdir -p /opt/nim; \
