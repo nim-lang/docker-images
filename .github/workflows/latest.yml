@@ -36,26 +36,10 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
 
-      - name: Determine Platforms
-        id: platforms
-        run: |
-          VERSION="${{ steps.meta.outputs.version }}"
-          PLATFORMS="linux/amd64"
-
-          if [ -d "./dockerfiles/$VERSION/arm64v8" ]; then
-            PLATFORMS="$PLATFORMS,linux/arm64"
-          fi
-
-          if [ -d "./dockerfiles/$VERSION/arm32v7" ]; then
-            PLATFORMS="$PLATFORMS,linux/arm/v7"
-          fi
-
-          echo "platforms=$PLATFORMS" >> $GITHUB_OUTPUT
-
       - name: Build and Push
         uses: docker/build-push-action@v7
         with:
           context: ./dockerfiles/${{ steps.meta.outputs.version }}
-          platforms: ${{ steps.platforms.outputs.platforms }}
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
