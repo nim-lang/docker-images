@@ -20,7 +20,7 @@ for v in versions:
     continue
 
   output.add "Tags: " & v.tags.join(", ") & "\n"
-  output.add "Architectures: amd64, arm64v8\n"
+  output.add "Architectures: amd64, arm64v8, i386, arm32v7\n"
   output.add "Directory: " & dirPath.relativePath(".", sep = '/') & "\n"
 
   output.add "\n"
