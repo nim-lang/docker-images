@@ -1,4 +1,4 @@
-FROM node:lts-trixie
+FROM debian:trixie-slim
 
 RUN set -eux; \
   apt-get update; \
@@ -12,7 +12,9 @@ RUN set -eux; \
     curl \
     xz-utils \
   ; \
-  apt-get dist-clean
+  apt-get autoremove -y; \
+  apt-get clean; \
+  rm -rf /var/lib/apt/lists/*
 
 ENV NIM_VERSION=2.0.2
 ENV PATH="/opt/nim/bin:${PATH}"
@@ -24,8 +26,13 @@ RUN set -eux; \
   case "${dpkgArch}" in \
     amd64) url='https://github.com/nim-lang/nightlies/releases/download/2023-12-15-version-2-0-c4c44d10df8a14204a75c34e499def200589cb7c/nim-2.0.2-linux_x64.tar.xz'; sha256='047dde8ff40b18628ac1188baa9ca992d05f1f45c5121d1d07a76224f06e1551' ;; \
     arm64) url='https://github.com/nim-lang/nightlies/releases/download/2023-12-15-version-2-0-c4c44d10df8a14204a75c34e499def200589cb7c/nim-2.0.2-linux_arm64.tar.xz'; sha256='1888d1ffe41360e0accbd3547e0699c8b9781cd9e96fc1ff2692d8449d8168ac' ;; \
+    i386)  url='https://github.com/nim-lang/nightlies/releases/download/2023-12-15-version-2-0-c4c44d10df8a14204a75c34e499def200589cb7c/nim-2.0.2-linux_x32.tar.xz';  sha256='ac9afbf8c4543d2486e54911b7eaeeb7b963573815f95650de3319e10f72e9c8' ;; \
+    armhf) url='https://github.com/nim-lang/nightlies/releases/download/2023-12-15-version-2-0-c4c44d10df8a14204a75c34e499def200589cb7c/nim-2.0.2-linux_armv7l.tar.xz'; sha256='31307c6e1489b68ed0b152d3c08aa5a57c6e9a3546b54b4b453f3b6145fb4cbb' ;; \
     *) echo >&2 "error: unsupported architecture: ${dpkgArch}"; exit 1 ;; \
   esac; \
+  if [ "$url" = "none" ]; then \
+    echo >&2 "error: no upstream binary for ${dpkgArch} in this Nim version"; exit 1; \
+  fi; \
   curl --fail --location "$url" --output nim.tar.xz; \
   echo "$sha256 *nim.tar.xz" | sha256sum --check --strict -; \
   mkdir -p /opt/nim; \
