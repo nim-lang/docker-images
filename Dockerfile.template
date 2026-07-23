@@ -26,6 +26,8 @@ RUN set -eux; \
   case "${dpkgArch}" in \
     amd64) url='%%URL_AMD64%%'; sha256='%%SHA_AMD64%%' ;; \
     arm64) url='%%URL_ARM64%%'; sha256='%%SHA_ARM64%%' ;; \
+    i386)  url='%%URL_I386%%';  sha256='%%SHA_I386%%' ;; \
+    armhf) url='%%URL_ARMHF%%'; sha256='%%SHA_ARMHF%%' ;; \
     *) echo >&2 "error: unsupported architecture: ${dpkgArch}"; exit 1 ;; \
   esac; \
   if [ "$url" = "none" ]; then \
