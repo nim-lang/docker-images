@@ -12,34 +12,46 @@ const
 
 proc getLocalSha256(url: string): string =
   ## Downloads binary to temp and hashes it using nimcrypto's streaming API.
-  let client = newHttpClient()
+  ## Retries up to 3 times on failure.
   let tempFile = getTempDir() / "nim_binary_tmp.tar.xz"
-  echo "    Downloading for hash: " & url
 
-  try:
-    client.downloadFile(url, tempFile)
+  var lastError = ""
+  for attempt in 1..3:
+    if attempt > 1:
+      echo "    Retry " & $attempt & "/3..."
+      sleep(2000)
+    else:
+      echo "    Downloading for hash: " & url
 
-    # Initialize nimcrypto SHA256 context
-    var ctx: sha256
-    ctx.init()
+    let client = newHttpClient()
+    try:
+      client.downloadFile(url, tempFile)
 
-    let f = open(tempFile, fmRead)
-    var buffer: array[8192, byte] # 8KB buffer for streaming
+      var ctx: sha256
+      ctx.init()
 
-    while (let bytesRead = f.readBytes(buffer, 0, buffer.len); bytesRead > 0):
-      # Update the hash with the current chunk
-      ctx.update(addr buffer[0], uint(bytesRead))
-    f.close()
+      let f = open(tempFile, fmRead)
+      var buffer: array[8192, byte]
 
-    let digest = ctx.finish()
-    result = ($digest).toLowerAscii()
-  except CatchableError as e:
-    echo "    !!! Error processing " & url & ": " & e.msg
-    result = "0"
-  finally:
-    if fileExists(tempFile):
-      removeFile(tempFile)
-    client.close()
+      while (let bytesRead = f.readBytes(buffer, 0, buffer.len); bytesRead > 0):
+        ctx.update(addr buffer[0], uint(bytesRead))
+      f.close()
+
+      let digest = ctx.finish()
+      result = ($digest).toLowerAscii()
+      client.close()
+      if fileExists(tempFile):
+        removeFile(tempFile)
+      return
+    except CatchableError as e:
+      lastError = e.msg
+      echo "    !!! Attempt " & $attempt & " failed: " & e.msg
+      client.close()
+      if fileExists(tempFile):
+        removeFile(tempFile)
+
+  echo "    !!! FATAL: Could not compute hash after 3 attempts: " & lastError
+  quit(1)
 
 proc generate() =
   let client = newHttpClient()
@@ -76,7 +88,11 @@ proc generate() =
       if versionData.hasKey(jsonArch):
         let node = versionData[jsonArch]
         let url = node["github_url"].getStr()
-        let sha = getLocalSha256(url)
+        var sha: string
+        if node.hasKey("digest"):
+          sha = node["digest"].getStr().replace("sha256:", "")
+        else:
+          sha = getLocalSha256(url)
 
         rootContent = rootContent.replace("%%URL_" & data.suffix & "%%", url)
         rootContent = rootContent.replace("%%SHA_" & data.suffix & "%%", sha)
