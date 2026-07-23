@@ -65,6 +65,8 @@ proc generate() =
     let archMap = {
       "linux_x64": (suffix: "AMD64", dir: "amd64"),
       "linux_arm64": (suffix: "ARM64", dir: "arm64v8"),
+      "linux_x32": (suffix: "I386", dir: "i386"),
+      "linux_armv7l": (suffix: "ARMHF", dir: "arm32v7"),
     }.toTable
 
     var rootContent = templateContent.replace("%%VERSION%%", ver)
