@@ -6,6 +6,19 @@ let
 
 let versions = [
   (version: "2.2.10", tags: @["2.2.10", "2.2", "2", "latest"]),
+  (version: "2.2.8",  tags: @["2.2.8"]),
+  (version: "2.2.6",  tags: @["2.2.6"]),
+  (version: "2.2.4",  tags: @["2.2.4"]),
+  (version: "2.2.2",  tags: @["2.2.2"]),
+  (version: "2.2.0",  tags: @["2.2.0"]),
+  (version: "2.0.14", tags: @["2.0.14", "2.0"]),
+  (version: "2.0.12", tags: @["2.0.12"]),
+  (version: "2.0.10", tags: @["2.0.10"]),
+  (version: "2.0.8",  tags: @["2.0.8"]),
+  (version: "2.0.6",  tags: @["2.0.6"]),
+  (version: "2.0.4",  tags: @["2.0.4"]),
+  (version: "2.0.2",  tags: @["2.0.2"]),
+  (version: "2.0.0",  tags: @["2.0.0"]),
 ]
 
 var output = "Maintainers: Constantine Molchanov (@moigagoo)\n"
@@ -20,7 +33,7 @@ for v in versions:
     continue
 
   output.add "Tags: " & v.tags.join(", ") & "\n"
-  output.add "Architectures: amd64, arm64v8\n"
+  output.add "Architectures: amd64, arm64v8, i386, arm32v7\n"
   output.add "Directory: " & dirPath.relativePath(".", sep = '/') & "\n"
 
   output.add "\n"
