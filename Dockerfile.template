@@ -1,4 +1,4 @@
-FROM node:lts-trixie
+FROM debian:trixie-slim
 
 RUN set -eux; \
   apt-get update; \
