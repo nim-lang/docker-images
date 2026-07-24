@@ -37,7 +37,7 @@ docker run --rm -v "$(pwd)":/usr/src/app nimlang/nim:latest nim js main.nim
 To compile and run, use a multi-stage Dockerfile with Node.js:
 
 ```dockerfile
-FROM nim:latest AS builder
+FROM nim AS builder
 COPY . .
 RUN nim js -o:app.js src/app.nim
 
