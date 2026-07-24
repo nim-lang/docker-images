@@ -12,9 +12,7 @@ RUN set -eux; \
     curl \
     xz-utils \
   ; \
-  apt-get autoremove -y; \
-  apt-get clean; \
-  rm -rf /var/lib/apt/lists/*
+  apt-get dist-clean
 
 ENV NIM_VERSION=2.0.0
 ENV PATH="/opt/nim/bin:${PATH}"
