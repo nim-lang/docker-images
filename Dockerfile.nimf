@@ -1,3 +1,7 @@
+#? stdtmpl(subsChar='?') | standard
+#type ArchInfo = tuple[dpkgArch: string, url: string, sha: string]
+#proc generateDockerfile*(version: string, arches: seq[ArchInfo]): string =
+#  result = ""
 FROM debian:trixie-slim
 
 RUN set -eux; \
@@ -14,7 +18,7 @@ RUN set -eux; \
   ; \
   apt-get dist-clean
 
-ENV NIM_VERSION=%%VERSION%%
+ENV NIM_VERSION=?version
 ENV PATH="/opt/nim/bin:${PATH}"
 
 WORKDIR /tmp
@@ -22,19 +26,15 @@ WORKDIR /tmp
 RUN set -eux; \
   dpkgArch="$(dpkg --print-architecture)"; \
   case "${dpkgArch}" in \
-    amd64) url='%%URL_AMD64%%'; sha256='%%SHA_AMD64%%' ;; \
-    arm64) url='%%URL_ARM64%%'; sha256='%%SHA_ARM64%%' ;; \
-    i386)  url='%%URL_I386%%';  sha256='%%SHA_I386%%' ;; \
-    armhf) url='%%URL_ARMHF%%'; sha256='%%SHA_ARMHF%%' ;; \
+#for arch in arches:
+    ?arch.dpkgArch) url='?arch.url'; sha256='?arch.sha' ;; \
+#end
     *) echo >&2 "error: unsupported architecture: ${dpkgArch}"; exit 1 ;; \
   esac; \
-  if [ "$url" = "none" ]; then \
-    echo >&2 "error: no upstream binary for ${dpkgArch} in this Nim version"; exit 1; \
-  fi; \
   curl --fail --location "$url" --output nim.tar.xz; \
   echo "$sha256 *nim.tar.xz" | sha256sum --check --strict -; \
   mkdir -p /opt/nim; \
-  tar -xJf nim.tar.xz --strip-components=1 --directory /opt/nim "nim-${NIM_VERSION}"; \
+  tar -xJf nim.tar.xz --strip-components=1 --directory /opt/nim "nim-?version"; \
   rm nim.tar.xz; \
   nim --version
 
