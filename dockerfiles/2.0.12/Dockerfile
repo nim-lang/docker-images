@@ -16,6 +16,7 @@ RUN set -eux; \
 
 ENV NIM_VERSION=2.0.12
 ENV PATH="/opt/nim/bin:${PATH}"
+ENV PATH="/root/.nimble/bin:${PATH}"
 
 WORKDIR /tmp
 
