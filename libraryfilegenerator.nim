@@ -1,4 +1,4 @@
-import std/[os, strutils, osproc]
+import std/[os, strutils, osproc, httpclient, json]
 
 let
   currentCommit = execProcess("git rev-parse HEAD").strip()
@@ -21,21 +21,46 @@ let versions = [
   (version: "2.0.0",  tags: @["2.0.0"]),
 ]
 
+let releasesUrl = "https://nim-lang.org/releases.json"
+
+let archMap = [
+  ("linux_x64",    "amd64"),
+  ("linux_arm64",  "arm64v8"),
+  ("linux_x32",    "i386"),
+  ("linux_armv7l", "arm32v7"),
+]
+
+echo "Fetching live releases.json..."
+let client = newHttpClient()
+var releases: JsonNode
+try:
+  releases = parseJson(client.getContent(releasesUrl))
+except:
+  echo "Error: Could not fetch releases.json"
+  quit(1)
+client.close()
+
 var output = "Maintainers: Constantine Molchanov (@moigagoo)\n"
 output.add "GitRepo: " & gitRepo & "\n"
 output.add "GitCommit: " & currentCommit & "\n\n"
 
-for v in versions:
-  let dirPath = "dockerfiles" / v.version
+for (ver, tags) in versions:
+  let dirPath = "dockerfiles" / ver
 
   if not dirExists(dirPath):
-    echo "Warning: skipping " & v.version & " because " & dirPath & " does not exist."
+    echo "Warning: skipping " & ver & " because " & dirPath & " does not exist."
     continue
 
-  output.add "Tags: " & v.tags.join(", ") & "\n"
-  output.add "Architectures: amd64, arm64v8, i386, arm32v7\n"
-  output.add "Directory: " & dirPath.relativePath(".", sep = '/') & "\n"
+  var archs: seq[string]
+  if releases.hasKey(ver):
+    let versionData = releases[ver]
+    for (jsonArch, dockerArch) in archMap:
+      if versionData.hasKey(jsonArch):
+        archs.add(dockerArch)
 
+  output.add "Tags: " & tags.join(", ") & "\n"
+  output.add "Architectures: " & archs.join(", ") & "\n"
+  output.add "Directory: " & dirPath.relativePath(".", sep = '/') & "\n"
   output.add "\n"
 
 writeFile("nim", output)
