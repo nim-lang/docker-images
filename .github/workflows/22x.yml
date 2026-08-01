@@ -39,7 +39,7 @@ jobs:
         id: platforms
         run: |
           PLATFORMS="linux/amd64"
-          if ! grep -q "arm64) url='none'" ./dockerfiles/${{ matrix.nim-version }}/Dockerfile; then
+          if grep -q "arm64) url='" ./dockerfiles/${{ matrix.nim-version }}/Dockerfile; then
             PLATFORMS="$PLATFORMS,linux/arm64"
           fi
           echo "platforms=$PLATFORMS" >> $GITHUB_OUTPUT
