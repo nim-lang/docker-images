@@ -17,13 +17,13 @@ These images provide a stable, multi-architecture environment for developing and
 To compile a file named `main.nim`:
 
 ```bash
-docker run --rm -v "$(pwd)":/usr/src/app nimlang/nim:latest nim c main.nim
+docker run --rm -v "$(pwd)":/usr/src/app nim:latest nim c main.nim
 ```
 
 To compile and immediately run:
 
 ```bash
-docker run --rm -v "$(pwd)":/usr/src/app nimlang/nim:latest nim c -r main.nim
+docker run --rm -v "$(pwd)":/usr/src/app nim:latest nim c -r main.nim
 ```
 
 ### Compile to JavaScript
@@ -31,7 +31,7 @@ docker run --rm -v "$(pwd)":/usr/src/app nimlang/nim:latest nim c -r main.nim
 To compile a .nim file to JS:
 
 ```bash
-docker run --rm -v "$(pwd)":/usr/src/app nimlang/nim:latest nim js main.nim
+docker run --rm -v "$(pwd)":/usr/src/app nim:latest nim js main.nim
 ```
 
 To compile and run, use a multi-stage Dockerfile with Node.js:
@@ -51,13 +51,13 @@ CMD ["node", "app.js"]
 The image is configured with SSL support to allow Nimble to install packages from remote repositories:
 
 ```bash
-docker run --rm -v "$(pwd)":/usr/src/app nimlang/nim:latest nimble setup -y
+docker run --rm -v "$(pwd)":/usr/src/app nim:latest nimble setup -y
 ```
 
 To build a binary Nimble package:
 
 ```bash
-docker run --rm -v "$(pwd)":/usr/src/app nimlang/nim:latest nimble build
+docker run --rm -v "$(pwd)":/usr/src/app nim:latest nimble build
 ```
 
 ## Understanding the Tags
