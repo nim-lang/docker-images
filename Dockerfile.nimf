@@ -2,7 +2,7 @@
 #type ArchInfo = tuple[dpkgArch: string, url: string, sha: string]
 #proc generateDockerfile*(version: string, arches: seq[ArchInfo]): string =
 #  result = ""
-FROM debian:trixie-slim
+FROM debian:bookworm-slim
 
 RUN set -eux; \
   apt-get update; \
@@ -16,7 +16,7 @@ RUN set -eux; \
     curl \
     xz-utils \
   ; \
-  apt-get dist-clean
+  rm -rf /var/lib/apt/lists/*
 
 ENV NIM_VERSION=?version
 ENV PATH="/opt/nim/bin:${PATH}"

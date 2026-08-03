@@ -1,4 +1,4 @@
-FROM debian:trixie-slim
+FROM debian:bookworm-slim
 
 RUN set -eux; \
   apt-get update; \
@@ -12,7 +12,7 @@ RUN set -eux; \
     curl \
     xz-utils \
   ; \
-  apt-get dist-clean
+  rm -rf /var/lib/apt/lists/*
 
 ENV NIM_VERSION=2.2.0
 ENV PATH="/opt/nim/bin:${PATH}"
