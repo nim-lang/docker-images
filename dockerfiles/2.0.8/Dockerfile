@@ -11,6 +11,7 @@ RUN set -eux; \
     openssl \
     curl \
     xz-utils \
+    libpcre3-dev libpcre3 \
   ; \
   rm -rf /var/lib/apt/lists/*
 
