@@ -1,0 +1,48 @@
+name: Maintenance - Nim 2.4.x
+
+on:
+  schedule:
+    - cron: "0 0 1 * *"
+  workflow_dispatch:
+
+jobs:
+  maintenance:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        nim-version:
+          - 2.4.0
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Determine Platforms
+        id: platforms
+        run: |
+          PLATFORMS="linux/amd64"
+          if grep -q "arm64) url='" ./dockerfiles/${{ matrix.nim-version }}/Dockerfile; then
+            PLATFORMS="$PLATFORMS,linux/arm64"
+          fi
+          echo "platforms=$PLATFORMS" >> $GITHUB_OUTPUT
+
+      - name: Build and Push
+        uses: docker/build-push-action@v7
+        with:
+          context: ./dockerfiles/${{ matrix.nim-version }}
+          platforms: ${{ steps.platforms.outputs.platforms }}
+          push: true
+          tags: nimlang/nim:${{ matrix.nim-version }}
